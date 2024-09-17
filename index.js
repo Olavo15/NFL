@@ -4,7 +4,6 @@ const fs = require('fs');
 
 const URL = "https://www.espn.com.br/nfl/classificacao";
 
-
 async function fetchNFLData() {
     try {
         const response = await axios.get(URL);
@@ -18,7 +17,7 @@ async function fetchNFLData() {
             const dados = [];
 
             
-            $(this).find(".Table__Colgroup td").each(function(index) {
+            $(this).find("td").each(function(index) {
                 if (index !== 0) {  
                     dados.push($(this).text().trim());
                 }
@@ -36,7 +35,6 @@ async function fetchNFLData() {
     }
 }
 
-
 function generateXML(posts) {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<times>\n';
@@ -46,20 +44,18 @@ function generateXML(posts) {
 
         xml += `  <time>\n`;
         xml += `    <nome>${post.time}</nome>\n`;
-        xml += `    <vitorias>${vitorias}</vitorias>\n`;
-        xml += `    <derrotas>${derrotas}</derrotas>\n`;
-        xml += `    <empates>${empates}</empates>\n`;
-        xml += `    <percentualVitorias>${porcentagemVit}</percentualVitorias>\n`;
+        xml += `    <vitorias>${vitorias || 'N/A'}</vitorias>\n`;
+        xml += `    <derrotas>${derrotas || 'N/A'}</derrotas>\n`;
+        xml += `    <empates>${empates || 'N/A'}</empates>\n`;
+        xml += `    <percentualVitorias>${porcentagemVit || 'N/A'}</percentualVitorias>\n`;
         xml += `  </time>\n`;
     });
 
     xml += '</times>\n';
 
-
     fs.writeFileSync('nfl_classificacao.xml', xml, { encoding: 'utf-8' });
     console.log('Arquivo XML gerado com sucesso!');
 }
-
 
 async function main() {
     const posts = await fetchNFLData();
