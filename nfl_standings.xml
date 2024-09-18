@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teams>
+  <team>
+    <name>Buffalo Bills</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>New England Patriots</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>New York Jets</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Miami Dolphins</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Pittsburgh Steelers</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Cleveland Browns</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Baltimore Ravens</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Cincinnati Bengals</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Houston Texans</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Indianapolis Colts</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Jacksonville Jaguars</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Tennessee Titans</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Los Angeles Chargers</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Kansas City Chiefs</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Las Vegas Raiders</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Denver Broncos</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Washington Commanders</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Philadelphia Eagles</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Dallas Cowboys</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>New York Giants</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Minnesota Vikings</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Detroit Lions</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Chicago Bears</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Green Bay Packers</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>New Orleans Saints</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Tampa Bay Buccaneers</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Atlanta Falcons</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Carolina Panthers</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+  <team>
+    <name>Seattle Seahawks</name>
+    <wins>2</wins>
+    <losses>0</losses>
+    <ties>0</ties>
+    <winPercentage>1.000</winPercentage>
+  </team>
+  <team>
+    <name>Arizona Cardinals</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>San Francisco 49ers</name>
+    <wins>1</wins>
+    <losses>1</losses>
+    <ties>0</ties>
+    <winPercentage>0.500</winPercentage>
+  </team>
+  <team>
+    <name>Los Angeles Rams</name>
+    <wins>0</wins>
+    <losses>2</losses>
+    <ties>0</ties>
+    <winPercentage>0.000</winPercentage>
+  </team>
+</teams>
