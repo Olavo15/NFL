@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-const URL = "https://www.nfl.com/standings/";
+const URL = "https://www.nfl.com/scores/";
 
 async function fetchNFLData() {
     try {
@@ -17,8 +17,7 @@ async function fetchNFLData() {
         const teams = [];
 
         $("tbody tr").each(function() {
-            const teamName = $(this).find(".d3-o-club-fullname").text().trim();
-            const teamShortName = $(this).find(".d3-o-club-shortname").text().trim();
+            const Game = $(this).find(".css-pdlny6-Row").text().trim();
             const stats = [];
 
             $(this).find("td").each(function(index) {
@@ -40,19 +39,11 @@ async function fetchNFLData() {
 }
 
 function generateXML(teams) {
-    let versionNumber = 1;
-
-    function updateVersion() {
-        versionNumber++;
-    }
-
-    updateVersion();
-
-    let xml = `<?xml version="${versionNumber}" encoding="UTF-8"?>\n`;
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<teams>\n';
 
     teams.forEach(team => {
-        const [wins, losses, ties, winPercentage, PF, PA, NetPts, Div, Pct ] = team.stats;
+        const [wins, losses, ties, winPercentage] = team.stats;
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
@@ -60,18 +51,12 @@ function generateXML(teams) {
         xml += `    <losses>${losses || '0'}</losses>\n`;
         xml += `    <ties>${ties || '0'}</ties>\n`;
         xml += `    <winPercentage>${winPercentage || '0'}</winPercentage>\n`;
-        xml += `    <PF>${PF || '0'}</PF>\n`;
-        xml += `    <PA>${PA || '0'}</PA>\n`;
-        xml += `    <NetPts>${NetPts || '0'}</NetPts>\n`;
-        xml += `    <Div>${Div || '0'}</Div>\n`;
-        xml += `    <Pct>${Pct || '0'}</Pct>\n`;
-        
         xml += `  </team>\n`;
     });
 
     xml += '</teams>\n';
 
-    fs.writeFileSync('Docs/nfl_standings.csv', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nfl_standings.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 

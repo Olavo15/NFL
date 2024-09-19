@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="2" encoding="UTF-8"?>
 <teams>
   <team>
     <name>Buffalo Bills</name>
@@ -6,6 +6,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>65</PF>
+    <PA>38</PA>
+    <NetPts>27</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>New England Patriots</name>
@@ -13,6 +18,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>36</PF>
+    <PA>33</PA>
+    <NetPts>3</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>New York Jets</name>
@@ -20,6 +30,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>43</PF>
+    <PA>49</PA>
+    <NetPts>-6</NetPts>
+    <Div>0 - 0 - 0</Div>
+    <Pct>1 - 1 - 0</Pct>
   </team>
   <team>
     <name>Miami Dolphins</name>
@@ -27,6 +42,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>30</PF>
+    <PA>48</PA>
+    <NetPts>-18</NetPts>
+    <Div>1 - 1 - 0</Div>
+    <Pct>0 - 0 - 0</Pct>
   </team>
   <team>
     <name>Pittsburgh Steelers</name>
@@ -34,6 +54,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>31</PF>
+    <PA>16</PA>
+    <NetPts>15</NetPts>
+    <Div>0 - 0 - 0</Div>
+    <Pct>2 - 0 - 0</Pct>
   </team>
   <team>
     <name>Cleveland Browns</name>
@@ -41,6 +66,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>35</PF>
+    <PA>46</PA>
+    <NetPts>-11</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Baltimore Ravens</name>
@@ -48,6 +78,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>43</PF>
+    <PA>53</PA>
+    <NetPts>-10</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Cincinnati Bengals</name>
@@ -55,6 +90,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>35</PF>
+    <PA>42</PA>
+    <NetPts>-7</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Houston Texans</name>
@@ -62,6 +102,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>48</PF>
+    <PA>40</PA>
+    <NetPts>8</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Indianapolis Colts</name>
@@ -69,6 +114,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>37</PF>
+    <PA>45</PA>
+    <NetPts>-8</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Jacksonville Jaguars</name>
@@ -76,6 +126,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>30</PF>
+    <PA>38</PA>
+    <NetPts>-8</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Tennessee Titans</name>
@@ -83,6 +138,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>34</PF>
+    <PA>48</PA>
+    <NetPts>-14</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Los Angeles Chargers</name>
@@ -90,6 +150,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>48</PF>
+    <PA>13</PA>
+    <NetPts>35</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Kansas City Chiefs</name>
@@ -97,6 +162,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>53</PF>
+    <PA>45</PA>
+    <NetPts>8</NetPts>
+    <Div>2 - 0 - 0</Div>
+    <Pct>0 - 0 - 0</Pct>
   </team>
   <team>
     <name>Las Vegas Raiders</name>
@@ -104,6 +174,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>36</PF>
+    <PA>45</PA>
+    <NetPts>-9</NetPts>
+    <Div>0 - 0 - 0</Div>
+    <Pct>1 - 1 - 0</Pct>
   </team>
   <team>
     <name>Denver Broncos</name>
@@ -111,6 +186,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>26</PF>
+    <PA>39</PA>
+    <NetPts>-13</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Washington Commanders</name>
@@ -118,6 +198,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>41</PF>
+    <PA>55</PA>
+    <NetPts>-14</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Philadelphia Eagles</name>
@@ -125,6 +210,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>55</PF>
+    <PA>51</PA>
+    <NetPts>4</NetPts>
+    <Div>1 - 1 - 0</Div>
+    <Pct>0 - 0 - 0</Pct>
   </team>
   <team>
     <name>Dallas Cowboys</name>
@@ -132,6 +222,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>52</PF>
+    <PA>61</PA>
+    <NetPts>-9</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>New York Giants</name>
@@ -139,6 +234,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>24</PF>
+    <PA>49</PA>
+    <NetPts>-25</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Minnesota Vikings</name>
@@ -146,6 +246,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>51</PF>
+    <PA>23</PA>
+    <NetPts>28</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Detroit Lions</name>
@@ -153,6 +258,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>42</PF>
+    <PA>40</PA>
+    <NetPts>2</NetPts>
+    <Div>1 - 1 - 0</Div>
+    <Pct>0 - 0 - 0</Pct>
   </team>
   <team>
     <name>Chicago Bears</name>
@@ -160,6 +270,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>37</PF>
+    <PA>36</PA>
+    <NetPts>1</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Green Bay Packers</name>
@@ -167,6 +282,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>45</PF>
+    <PA>44</PA>
+    <NetPts>1</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>New Orleans Saints</name>
@@ -174,6 +294,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>91</PF>
+    <PA>29</PA>
+    <NetPts>62</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Tampa Bay Buccaneers</name>
@@ -181,6 +306,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>57</PF>
+    <PA>36</PA>
+    <NetPts>21</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Atlanta Falcons</name>
@@ -188,6 +318,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>32</PF>
+    <PA>39</PA>
+    <NetPts>-7</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Carolina Panthers</name>
@@ -195,6 +330,11 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>13</PF>
+    <PA>73</PA>
+    <NetPts>-60</NetPts>
+    <Div>0 - 1 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Seattle Seahawks</name>
@@ -202,6 +342,11 @@
     <losses>0</losses>
     <ties>0</ties>
     <winPercentage>1.000</winPercentage>
+    <PF>49</PF>
+    <PA>40</PA>
+    <NetPts>9</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>1 - 0 - 0</Pct>
   </team>
   <team>
     <name>Arizona Cardinals</name>
@@ -209,6 +354,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>69</PF>
+    <PA>44</PA>
+    <NetPts>25</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>San Francisco 49ers</name>
@@ -216,6 +366,11 @@
     <losses>1</losses>
     <ties>0</ties>
     <winPercentage>0.500</winPercentage>
+    <PF>49</PF>
+    <PA>42</PA>
+    <NetPts>7</NetPts>
+    <Div>1 - 0 - 0</Div>
+    <Pct>0 - 1 - 0</Pct>
   </team>
   <team>
     <name>Los Angeles Rams</name>
@@ -223,5 +378,10 @@
     <losses>2</losses>
     <ties>0</ties>
     <winPercentage>0.000</winPercentage>
+    <PF>30</PF>
+    <PA>67</PA>
+    <NetPts>-37</NetPts>
+    <Div>0 - 0 - 0</Div>
+    <Pct>0 - 2 - 0</Pct>
   </team>
 </teams>
