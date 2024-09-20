@@ -40,7 +40,7 @@ async function fetchNFLData() {
 }
 
 function generateXML(teams) {
-    let versionNumber = 1;
+    let versionNumber = 0;
 
     function updateVersion() {
         versionNumber++;
@@ -52,7 +52,7 @@ function generateXML(teams) {
     xml += '<teams>\n';
 
     teams.forEach(team => {
-        const [wins, losses, ties, winPercentage, PF, PA, NetPts, Div, Pct ] = team.stats;
+        const [wins, losses, ties, winPercentage, PF, PA, NetPts, Div, Pct, Conf, PctDiv, Non_Conf, Strk, Last_5] = team.stats;
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
@@ -65,14 +65,18 @@ function generateXML(teams) {
         xml += `    <NetPts>${NetPts || '0'}</NetPts>\n`;
         xml += `    <Div>${Div || '0'}</Div>\n`;
         xml += `    <Pct>${Pct || '0'}</Pct>\n`;
-        
+        xml += `    <Conf>${Conf || '0'}</Conf>\n`;
+        xml += `    <PctDiv>${PctDiv || '0'}</PctDiv>\n`;
+        xml += `    <Non_Conf>${Non_Conf || '0'}</Non_Conf>\n`;
+        xml += `    <Strk>${Strk || '0'}</Strk>\n`;
+        xml += `    <Last_5>${Last_5 || '0'}</Last_5>\n`;
         xml += `  </team>\n`;
     });
 
     xml += '</teams>\n';
 
-    fs.writeFileSync('Docs/nfl_standings.csv', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nfl_standings.xml', xml, { encoding: 'utf-8' });
+    console.log('xml file generated successfully!');
 }
 
 async function main() {

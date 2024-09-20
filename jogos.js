@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const URL = "https://www.nfl.com/scores/";
 
-async function fetchNFLData() {
+async function fetchNFLScores() {
     try {
         const response = await axios.get(URL);
 
@@ -14,56 +14,59 @@ async function fetchNFLData() {
 
         const html = response.data;
         const $ = cheerio.load(html);
-        const teams = [];
+        const games = [];
 
-        $("tbody tr").each(function() {
-            const Game = $(this).find(".css-pdlny6-Row").text().trim();
-            const stats = [];
+        // Seletor para os times corrigido
+        const selectorTeams = 'div.css-text-146c3p1.r-color-1khnkhu.r-fontFamily-1fdbu1n.r-fontSize-ubezar'; 
+        const teams = $(selectorTeams);
 
-            $(this).find("td").each(function(index) {
-                if (index !== 0) {  
-                    stats.push($(this).text().trim());
-                }
-            });
+        console.log(`Total de times encontrados: ${teams.length}`);
 
-            if (teamName) {
-                teams.push({ teamName: teamName || teamShortName, stats });
+        for (let i = 0; i < teams.length; i += 2) {
+            const homeTeam = $(teams[i]).text().trim();
+            const awayTeam = $(teams[i + 1]).text().trim();
+
+            console.log(`Home Team: ${homeTeam}, Away Team: ${awayTeam}`);
+
+            if (homeTeam && awayTeam) {
+                games.push({
+                    homeTeam,
+                    awayTeam
+                });
             }
-        });
+        }
 
-        return teams;
+        return games;
     } catch (error) {
         console.error("Error fetching data:", error);
         return [];
     }
 }
 
-function generateXML(teams) {
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<teams>\n';
+function generateScoresXML(games) {
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += '<games>\n';
 
-    teams.forEach(team => {
-        const [wins, losses, ties, winPercentage] = team.stats;
-
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <wins>${wins || '0'}</wins>\n`;
-        xml += `    <losses>${losses || '0'}</losses>\n`;
-        xml += `    <ties>${ties || '0'}</ties>\n`;
-        xml += `    <winPercentage>${winPercentage || '0'}</winPercentage>\n`;
-        xml += `  </team>\n`;
+    games.forEach(game => {
+        xml += `  <game>\n`;
+        xml += `    <homeTeam>${game.homeTeam}</homeTeam>\n`;
+        xml += `    <awayTeam>${game.awayTeam}</awayTeam>\n`;
+        xml += `  </game>\n`;
     });
 
-    xml += '</teams>\n';
+    xml += '</games>\n';
 
-    fs.writeFileSync('Docs/nfl_standings.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nfl_scores.xml', xml, { encoding: 'utf-8' });
+    console.log('XML file with scores generated successfully!');
 }
 
 async function main() {
-    const teams = await fetchNFLData();
-    if (teams.length > 0) {
-        generateXML(teams);
+    const games = await fetchNFLScores();
+    console.log(`Total de jogos encontrados: ${games.length}`);
+    if (games.length > 0) {
+        generateScoresXML(games);
+    } else {
+        console.log('No games found.');
     }
 }
 
