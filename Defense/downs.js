@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 
 
-const URL = "https://www.nfl.com/stats/team-stats/offense/scoring/2024/reg/all";
+const URL = "https://www.nfl.com/stats/team-stats/defense/downs/2024/reg/all";
 
 async function fetchNFLScoringData() {
     try {
@@ -48,19 +48,34 @@ function generateXML(teams) {
 
     
     teams.forEach(team => {
-        const [Rsh_TD, Rec_TD, Tot_TD, Two_Pt] = team.stats;
+        const [
+            threeRdAtt,    
+            threeRdMd,     
+            fourThAtt,     
+            fourThMd,      
+            recOneSt,      
+            recOneStPct,
+            rushOneSt,     
+            rushOneStPct,   
+            scrmPlys       
+        ] = team.stats;
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <rushingTouchdowns>${Rsh_TD || '0'}</rushingTouchdowns>\n`;
-        xml += `    <receivingTouchdowns>${Rec_TD || '0'}</receivingTouchdowns>\n`;
-        xml += `    <totalTouchdowns>${Tot_TD || '0'}</totalTouchdowns>\n`;
-        xml += `    <twoPointConversions>${Two_Pt || '0'}</twoPointConversions>\n`;
+        xml += `    <thirdDownAttempts>${threeRdAtt || '0'}</thirdDownAttempts>\n`;
+        xml += `    <thirdDownMade>${threeRdMd || '0'}</thirdDownMade>\n`;
+        xml += `    <fourthDownAttempts>${fourThAtt || '0'}</fourthDownAttempts>\n`;
+        xml += `    <fourthDownMade>${fourThMd || '0'}</fourthDownMade>\n`;
+        xml += `    <receivingFirstDowns>${recOneSt || '0'}</receivingFirstDowns>\n`;
+        xml += `    <receivingFirstDownPercentage>${recOneStPct || '0'}</receivingFirstDownPercentage>\n`;
+        xml += `    <rushingFirstDowns>${rushOneSt || '0'}</rushingFirstDowns>\n`;
+        xml += `    <rushingFirstDownPercentage>${rushOneStPct || '0'}</rushingFirstDownPercentage>\n`;
+        xml += `    <scrimmagePlays>${scrmPlys || '0'}</scrimmagePlays>\n`;
         xml += `  </team>\n`;
     });
 
     xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflOffenseScoringStats.xml', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nflDefenseDownsStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 

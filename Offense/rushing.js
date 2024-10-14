@@ -68,7 +68,7 @@ function generateXML(teams) {
     });
 
     xml += '</teams>\n';
-    fs.writeFileSync('Docs/nfl_rushing_stats.xml', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nflOffenseRushingStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 

@@ -75,7 +75,7 @@ function generateXML(teams) {
     });
 
     xml += '</teams>\n';
-    fs.writeFileSync('Docs/nfl_downs_stats.xml', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nflOffenseDownsStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 

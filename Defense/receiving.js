@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-const URL = "https://www.nfl.com/stats/team-stats/offense/receiving/2024/reg/all";
+const URL = "https://www.nfl.com/stats/team-stats/defense/receiving/2024/reg/all";
 
 async function fetchNFLReceivingData() {
     try {
@@ -62,7 +62,7 @@ function generateXML(teams) {
     });
 
     xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflOffenseReceivingStats.xml', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nflDefenseReceivingStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 
