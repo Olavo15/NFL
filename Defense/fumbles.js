@@ -55,11 +55,11 @@ function generateXML(teams) {
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <FF>${FF || '0'}</FF>\n`;              
-        xml += `    <FR>${FR || '0'}</FR>\n`;              
-        xml += `    <FRTD>${FRTD || '0'}</FRTD>\n`;        
-        xml += `    <RecFum>${RecFum || '0'}</RecFum>\n`;  
-        xml += `    <RushFum>${RushFum || '0'}</RushFum>\n`;  
+        xml += `    <forcedFumbles>${FF || '0'}</forcedFumbles>\n`;              
+        xml += `    <fumbleRecoveries>${FR || '0'}</fumbleRecoveries>\n`;              
+        xml += `    <fumbleRecoveryTDs>${FRTD || '0'}</fumbleRecoveryTDs>\n`;        
+        xml += `    <recoveredFumbles>${RecFum || '0'}</recoveredFumbles>\n`;  
+        xml += `    <rushedFumbles>${RushFum || '0'}</rushedFumbles>\n`;  
         xml += `  </team>\n`;
     });
 

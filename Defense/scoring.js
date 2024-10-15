@@ -2,14 +2,12 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/defense/scoring/2024/reg/all";
 
 async function fetchNFLScoringData() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-
         
         await page.goto(URL, { waitUntil: 'networkidle2' });
         await page.waitForSelector('tbody');
@@ -18,7 +16,6 @@ async function fetchNFLScoringData() {
         const $ = cheerio.load(html);
         const teams = [];
 
-        
         $("tbody tr").each(function () {
             const teamName = $(this).find(".d3-o-club-fullname").text().trim();
             const stats = [];
@@ -46,16 +43,14 @@ function generateXML(teams) {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += '<teams>\n';
 
-    
     teams.forEach(team => {
-        const [Rsh_TD, Rec_TD, Tot_TD, Two_Pt] = team.stats;
+        const [frTD, sfty, intTD] = team.stats; 
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <rushingTouchdowns>${Rsh_TD || '0'}</rushingTouchdowns>\n`;
-        xml += `    <receivingTouchdowns>${Rec_TD || '0'}</receivingTouchdowns>\n`;
-        xml += `    <totalTouchdowns>${Tot_TD || '0'}</totalTouchdowns>\n`;
-        xml += `    <twoPointConversions>${Two_Pt || '0'}</twoPointConversions>\n`;
+        xml += `    <fumbleRecoveriesTD>${frTD || '0'}</fumbleRecoveriesTD>\n`; 
+        xml += `    <safeties>${sfty || '0'}</safeties>\n`; 
+        xml += `    <interceptionTouchdowns>${intTD || '0'}</interceptionTouchdowns>\n`;
         xml += `  </team>\n`;
     });
 
