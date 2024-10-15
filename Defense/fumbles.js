@@ -2,16 +2,17 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-const URL = "https://www.nfl.com/stats/team-stats/defense/receiving/2024/reg/all";
+// URL for NFL Defense Fumble Stats
+const URL = "https://www.nfl.com/stats/team-stats/defense/fumbles/2024/reg/all";
 
-async function fetchNFLReceivingData() {
+async function fetchNFLFumbleData() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
 
         
         await page.goto(URL, { waitUntil: 'networkidle2' });
-        await page.waitForSelector('tbody'); 
+        await page.waitForSelector('tbody');
 
         
         const html = await page.content();
@@ -48,33 +49,27 @@ function generateXML(teams) {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += '<teams>\n';
 
-    
+
     teams.forEach(team => {
-        const [rec, yds, ydsPerRec, touchdowns, receptions20Plus, receptions40Plus, longReception, recFirstDowns, recFirstDownPct, recFumbles, passesDefended] = team.stats;
+        const [FF, FR, FRTD, RecFum, RushFum] = team.stats;
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <receptions>${rec || '0'}</receptions>\n`;
-        xml += `    <receivingYards>${yds || '0'}</receivingYards>\n`;
-        xml += `    <yardsPerReception>${ydsPerRec || '0'}</yardsPerReception>\n`;
-        xml += `    <touchdowns>${touchdowns || '0'}</touchdowns>\n`;
-        xml += `    <receptions20Plus>${receptions20Plus || '0'}</receptions20Plus>\n`;
-        xml += `    <receptions40Plus>${receptions40Plus || '0'}</receptions40Plus>\n`;
-        xml += `    <longReception>${longReception || '0'}</longReception>\n`;
-        xml += `    <recFirstDowns>${recFirstDowns || '0'}</recFirstDowns>\n`;
-        xml += `    <recFirstDownPct>${recFirstDownPct || '0'}</recFirstDownPct>\n`;
-        xml += `    <recFumbles>${recFumbles || '0'}</recFumbles>\n`;
-        xml += `    <passesDefended>${passesDefended || '0'}</passesDefended>\n`;
+        xml += `    <FF>${FF || '0'}</FF>\n`;              
+        xml += `    <FR>${FR || '0'}</FR>\n`;              
+        xml += `    <FRTD>${FRTD || '0'}</FRTD>\n`;        
+        xml += `    <RecFum>${RecFum || '0'}</RecFum>\n`;  
+        xml += `    <RushFum>${RushFum || '0'}</RushFum>\n`;  
         xml += `  </team>\n`;
     });
 
     xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflDefenseReceivingStats.xml', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nflDefenseFumblesStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 
 async function main() {
-    const teams = await fetchNFLReceivingData();
+    const teams = await fetchNFLFumbleData();
     if (teams.length > 0) {
         generateXML(teams);
     } else {

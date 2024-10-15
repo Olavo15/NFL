@@ -51,30 +51,27 @@ function generateXML(teams) {
     xml += '<teams>\n';
 
     teams.forEach(team => {
-        const [passAttempts, completions, completionPercentage, yardsPerAttempt, passingYards, touchdowns, interceptions, passerRating, longPass, sackYards, sacks, spike, kneel, longest, thirdDownPct, redZoneTdPct] = team.stats;
+        const [att, cmp, cmpPercent, ydsPerAtt, yds, td, int, rate, first, firstPercent, twentyPlus, fortyPlus, long, sck] = team.stats;
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <passAttempts>${passAttempts || '0'}</passAttempts>\n`;
-        xml += `    <completions>${completions || '0'}</completions>\n`;
-        xml += `    <completionPercentage>${completionPercentage || '0'}</completionPercentage>\n`;
-        xml += `    <yardsPerAttempt>${yardsPerAttempt || '0'}</yardsPerAttempt>\n`;
-        xml += `    <passingYards>${passingYards || '0'}</passingYards>\n`;
-        xml += `    <touchdowns>${touchdowns || '0'}</touchdowns>\n`;
-        xml += `    <interceptions>${interceptions || '0'}</interceptions>\n`;
-        xml += `    <passerRating>${passerRating || '0'}</passerRating>\n`;
-        xml += `    <longPass>${longPass || '0'}</longPass>\n`;
-        xml += `    <sackYards>${sackYards || '0'}</sackYards>\n`;
-        xml += `    <sacks>${sacks || '0'}</sacks>\n`;
-        xml += `    <spike>${spike || '0'}</spike>\n`;
-        xml += `    <kneel>${kneel || '0'}</kneel>\n`;
-        xml += `    <longest>${longest || '0'}</longest>\n`;
-        xml += `    <thirdDownPct>${thirdDownPct || '0'}</thirdDownPct>\n`;
-        xml += `    <redZoneTdPct>${redZoneTdPct || '0'}</redZoneTdPct>\n`;
+        xml += `    <passAttempts>${att || '0'}</passAttempts>\n`;
+        xml += `    <completions>${cmp || '0'}</completions>\n`;
+        xml += `    <completionPercentage>${cmpPercent || '0'}</completionPercentage>\n`;
+        xml += `    <yardsPerAttempt>${ydsPerAtt || '0'}</yardsPerAttempt>\n`;
+        xml += `    <passingYards>${yds || '0'}</passingYards>\n`;
+        xml += `    <touchdowns>${td || '0'}</touchdowns>\n`;
+        xml += `    <interceptions>${int || '0'}</interceptions>\n`;
+        xml += `    <passerRating>${rate || '0'}</passerRating>\n`;
+        xml += `    <firstDowns>${first || '0'}</firstDowns>\n`;
+        xml += `    <firstDownPercentage>${firstPercent || '0'}</firstDownPercentage>\n`;
+        xml += `    <twentyPlus>${twentyPlus || '0'}</twentyPlus>\n`;
+        xml += `    <fortyPlus>${fortyPlus || '0'}</fortyPlus>\n`;
+        xml += `    <longestPass>${long || '0'}</longestPass>\n`;
+        xml += `    <sacks>${sck || '0'}</sacks>\n`;
         xml += `  </team>\n`;
     });
 
-    
     xml += '</teams>\n';
     fs.writeFileSync('Docs/nflDefensePassingStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
