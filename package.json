@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "install": "npm i",
-    "start": "node index.js && node Jogos.js",
+    "start": "node index.js && node Defense/downs.js && node Defense/fumbles.js && node Defense/interceptions.js && node Defense/passing.js && node Defense/receiving.js && node Defense/rushing.js && node Defense/scoring.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

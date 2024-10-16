@@ -2,14 +2,12 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
+const URL = "https://www.nfl.com/stats/team-stats/special-teams/punt-returns/2024/reg/all";
 
-const URL = "https://www.nfl.com/stats/team-stats/defense/downs/2024/reg/all";
-
-async function fetchNFLScoringData() {
+async function fetchNFLPuntReturnData() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-
         
         await page.goto(URL, { waitUntil: 'networkidle2' });
         await page.waitForSelector('tbody');
@@ -18,13 +16,12 @@ async function fetchNFLScoringData() {
         const $ = cheerio.load(html);
         const teams = [];
 
-        
         $("tbody tr").each(function () {
             const teamName = $(this).find(".d3-o-club-fullname").text().trim();
             const stats = [];
 
             $(this).find("td").each(function (index) {
-                if (index > 0) {
+                if (index > 0) {  
                     stats.push($(this).text().trim());
                 }
             });
@@ -46,41 +43,31 @@ function generateXML(teams) {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += '<teams>\n';
 
-    
     teams.forEach(team => {
-        const [
-            threeRdAtt,    
-            threeRdMd,     
-            fourThAtt,     
-            fourThMd,      
-            recOneSt,      
-            recOneStPct,
-            rushOneSt,     
-            rushOneStPct,   
-            scrmPlys       
-        ] = team.stats;
+        const [avg, ret, yds, pRetT, twentyPlus, fortyPlus, lng, fc, fum, pBlk] = team.stats;
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <thirdDownAttempts>${threeRdAtt || '0'}</thirdDownAttempts>\n`;
-        xml += `    <thirdDownMade>${threeRdMd || '0'}</thirdDownMade>\n`;
-        xml += `    <fourthDownAttempts>${fourThAtt || '0'}</fourthDownAttempts>\n`;
-        xml += `    <fourthDownMade>${fourThMd || '0'}</fourthDownMade>\n`;
-        xml += `    <receivingFirstDowns>${recOneSt || '0'}</receivingFirstDowns>\n`;
-        xml += `    <receivingFirstDownPercentage>${recOneStPct || '0'}</receivingFirstDownPercentage>\n`;
-        xml += `    <rushingFirstDowns>${rushOneSt || '0'}</rushingFirstDowns>\n`;
-        xml += `    <rushingFirstDownPercentage>${rushOneStPct || '0'}</rushingFirstDownPercentage>\n`;
-        xml += `    <scrimmagePlays>${scrmPlys || '0'}</scrimmagePlays>\n`;
+        xml += `    <average>${avg || '0'}</average>\n`;
+        xml += `    <returns>${ret || '0'}</returns>\n`;
+        xml += `    <yards>${yds || '0'}</yards>\n`;
+        xml += `    <puntReturnTouchdowns>${pRetT || '0'}</puntReturnTouchdowns>\n`;
+        xml += `    <twentyPlus>${twentyPlus || '0'}</twentyPlus>\n`;
+        xml += `    <fortyPlus>${fortyPlus || '0'}</fortyPlus>\n`;
+        xml += `    <longest>${lng || '0'}</longest>\n`;
+        xml += `    <fairCatches>${fc || '0'}</fairCatches>\n`;
+        xml += `    <fumbles>${fum || '0'}</fumbles>\n`;
+        xml += `    <puntsBlocked>${pBlk || '0'}</puntsBlocked>\n`;
         xml += `  </team>\n`;
     });
 
     xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflDefenseDownsStats.xml', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nflPuntReturnStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 
 async function main() {
-    const teams = await fetchNFLScoringData();
+    const teams = await fetchNFLPuntReturnData();
     if (teams.length > 0) {
         generateXML(teams);
     } else {

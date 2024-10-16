@@ -3,13 +3,12 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 
 
-const URL = "https://www.nfl.com/stats/team-stats/defense/downs/2024/reg/all";
+const URL = "https://www.nfl.com/stats/team-stats/special-teams/field-goals/2024/reg/all";
 
-async function fetchNFLScoringData() {
+async function fetchNFLFieldGoalData() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-
         
         await page.goto(URL, { waitUntil: 'networkidle2' });
         await page.waitForSelector('tbody');
@@ -18,13 +17,12 @@ async function fetchNFLScoringData() {
         const $ = cheerio.load(html);
         const teams = [];
 
-        
         $("tbody tr").each(function () {
             const teamName = $(this).find(".d3-o-club-fullname").text().trim();
             const stats = [];
 
             $(this).find("td").each(function (index) {
-                if (index > 0) {
+                if (index > 0) {  
                     stats.push($(this).text().trim());
                 }
             });
@@ -46,41 +44,32 @@ function generateXML(teams) {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += '<teams>\n';
 
-    
     teams.forEach(team => {
-        const [
-            threeRdAtt,    
-            threeRdMd,     
-            fourThAtt,     
-            fourThMd,      
-            recOneSt,      
-            recOneStPct,
-            rushOneSt,     
-            rushOneStPct,   
-            scrmPlys       
-        ] = team.stats;
+        const [fgm, attempts, fgPercentage, fg1to19, fg20to29, fg30to39, fg40to49, fg50to59, fg60Plus, longest, fgBlocked] = team.stats;
 
         xml += `  <team>\n`;
         xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <thirdDownAttempts>${threeRdAtt || '0'}</thirdDownAttempts>\n`;
-        xml += `    <thirdDownMade>${threeRdMd || '0'}</thirdDownMade>\n`;
-        xml += `    <fourthDownAttempts>${fourThAtt || '0'}</fourthDownAttempts>\n`;
-        xml += `    <fourthDownMade>${fourThMd || '0'}</fourthDownMade>\n`;
-        xml += `    <receivingFirstDowns>${recOneSt || '0'}</receivingFirstDowns>\n`;
-        xml += `    <receivingFirstDownPercentage>${recOneStPct || '0'}</receivingFirstDownPercentage>\n`;
-        xml += `    <rushingFirstDowns>${rushOneSt || '0'}</rushingFirstDowns>\n`;
-        xml += `    <rushingFirstDownPercentage>${rushOneStPct || '0'}</rushingFirstDownPercentage>\n`;
-        xml += `    <scrimmagePlays>${scrmPlys || '0'}</scrimmagePlays>\n`;
+        xml += `    <fieldGoalsMade>${fgm || '0'}</fieldGoalsMade>\n`;
+        xml += `    <attempts>${attempts || '0'}</attempts>\n`;
+        xml += `    <fieldGoalPercentage>${fgPercentage || '0'}</fieldGoalPercentage>\n`;
+        xml += `    <fg1to19>${fg1to19 || '0'}</fg1to19>\n`;
+        xml += `    <fg20to29>${fg20to29 || '0'}</fg20to29>\n`;
+        xml += `    <fg30to39>${fg30to39 || '0'}</fg30to39>\n`;
+        xml += `    <fg40to49>${fg40to49 || '0'}</fg40to49>\n`;
+        xml += `    <fg50to59>${fg50to59 || '0'}</fg50to59>\n`;
+        xml += `    <fg60Plus>${fg60Plus || '0'}</fg60Plus>\n`;
+        xml += `    <longest>${longest || '0'}</longest>\n`;
+        xml += `    <fgBlocked>${fgBlocked || '0'}</fgBlocked>\n`;
         xml += `  </team>\n`;
     });
 
     xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflDefenseDownsStats.xml', xml, { encoding: 'utf-8' });
+    fs.writeFileSync('Docs/nflSpecialTeamsFieldGoalsStats.xml', xml, { encoding: 'utf-8' });
     console.log('XML file generated successfully!');
 }
 
 async function main() {
-    const teams = await fetchNFLScoringData();
+    const teams = await fetchNFLFieldGoalData();
     if (teams.length > 0) {
         generateXML(teams);
     } else {

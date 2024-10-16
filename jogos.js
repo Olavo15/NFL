@@ -16,8 +16,8 @@ async function fetchNFLScores() {
         const $ = cheerio.load(html);
         const games = [];
 
-        // Seletor para os times corrigido
-        const selectorTeams = 'div.css-text-146c3p1.r-color-1khnkhu.r-fontFamily-1fdbu1n.r-fontSize-ubezar'; 
+        
+        const selectorTeams = 'nfl-c-matchup-strip__team-fullname'; 
         const teams = $(selectorTeams);
 
         console.log(`Total de times encontrados: ${teams.length}`);
