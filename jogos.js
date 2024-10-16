@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-const URL = "https://www.nfl.com/scores/";
+const URL = "https://www.cbssports.com/nfl/schedule/";
 
 async function fetchNFLScores() {
     try {
@@ -16,25 +16,24 @@ async function fetchNFLScores() {
         const $ = cheerio.load(html);
         const games = [];
 
-        
-        const selectorTeams = 'nfl-c-matchup-strip__team-fullname'; 
-        const teams = $(selectorTeams);
+        const gameRows = $('tbody tr.TableBase-bodyTr');
 
-        console.log(`Total de times encontrados: ${teams.length}`);
 
-        for (let i = 0; i < teams.length; i += 2) {
-            const homeTeam = $(teams[i]).text().trim();
-            const awayTeam = $(teams[i + 1]).text().trim();
+        gameRows.each((index, element) => {
+            const awayTeam = $(element).find('td:nth-child(1) .TeamName a').text().trim();
+            const homeTeam = $(element).find('td:nth-child(2) .TeamName a').text().trim();
+            const timeTV = $(element).find('td:nth-child(3) .CellGame a').text().trim();
+            
 
-            console.log(`Home Team: ${homeTeam}, Away Team: ${awayTeam}`);
 
             if (homeTeam && awayTeam) {
                 games.push({
                     homeTeam,
-                    awayTeam
+                    awayTeam,
+                    timeTV,
                 });
             }
-        }
+        });
 
         return games;
     } catch (error) {
@@ -51,7 +50,8 @@ function generateScoresXML(games) {
         xml += `  <game>\n`;
         xml += `    <homeTeam>${game.homeTeam}</homeTeam>\n`;
         xml += `    <awayTeam>${game.awayTeam}</awayTeam>\n`;
-        xml += `  </game>\n`;
+        xml += `    <timeTV>${game.timeTV}</timeTV>\n`;
+        xml += `  </game>\n\n`;
     });
 
     xml += '</games>\n';
@@ -62,7 +62,6 @@ function generateScoresXML(games) {
 
 async function main() {
     const games = await fetchNFLScores();
-    console.log(`Total de jogos encontrados: ${games.length}`);
     if (games.length > 0) {
         generateScoresXML(games);
     } else {
