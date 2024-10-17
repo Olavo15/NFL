@@ -37,17 +37,12 @@ async function executarArquivos(arquivos) {
 
         const progresso = ((index + 1) / totalArquivos) * 100;
 
-        if (index === 0) {
-            console.log('XML file with scores generated successfully!');
-        }
-
         console.log(`Progresso: ${definirCor(progresso)}`);
-
-        
+  
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
-    console.log('Todos os arquivos foram executados!');
+    console.log(chalk.green(`Todos os arquivos foram executados!\n`));
 }
 
 criarPasta();

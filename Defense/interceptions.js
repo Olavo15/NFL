@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/defense/interceptions/2024/reg/all";
 
 async function fetchNFLInterceptionData() {
@@ -22,7 +21,7 @@ async function fetchNFLInterceptionData() {
             const stats = [];
 
             $(this).find("td").each(function (index) {
-                if (index > 0) {  
+                if (index > 0) {
                     stats.push($(this).text().trim());
                 }
             });
@@ -40,34 +39,28 @@ async function fetchNFLInterceptionData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
+function saveToJSON(teams) {
+    const jsonData = teams.map(team => ({
+        teamName: team.teamName,
+        interceptions: team.stats[0] || '0',
+        interceptionTDs: team.stats[1] || '0',
+        interceptionYards: team.stats[2] || '0',
+        longestInterceptionReturn: team.stats[3] || '0'
+    }));
 
-    teams.forEach(team => {
-        const [interceptions, interceptionTDs, interceptionYards, longestInterceptionReturn] = team.stats;
-
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <interceptions>${interceptions || '0'}</interceptions>\n`;
-        xml += `    <interceptionTDs>${interceptionTDs || '0'}</interceptionTDs>\n`;
-        xml += `    <interceptionYards>${interceptionYards || '0'}</interceptionYards>\n`;
-        xml += `    <longestInterceptionReturn>${longestInterceptionReturn || '0'}</longestInterceptionReturn>\n`;
-        xml += `  </team>\n`;
-    });
-
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflDefenseInterceptionsStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflDefenseInterceptionsStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLInterceptionData();
     if (teams.length > 0) {
-        generateXML(teams);
+        saveToJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};

@@ -2,14 +2,12 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/defense/tackles/2024/reg/all";
 
-async function fetchNFLScoringData() {
+async function fetchNFLTacklesData() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-
         
         await page.goto(URL, { waitUntil: 'networkidle2' });
         await page.waitForSelector('tbody');
@@ -18,7 +16,6 @@ async function fetchNFLScoringData() {
         const $ = cheerio.load(html);
         const teams = [];
 
-        
         $("tbody tr").each(function () {
             const teamName = $(this).find(".d3-o-club-fullname").text().trim();
             const stats = [];
@@ -42,35 +39,28 @@ async function fetchNFLScoringData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
+function saveToJSON(teams) {
+    const jsonData = teams.map(team => ({
+        teamName: team.teamName,
+        sacks: team.stats[0] || '0',
+        combinedTackles: team.stats[1] || '0',
+        assists: team.stats[2] || '0',
+        soloTackles: team.stats[3] || '0'
+    }));
 
-    
-    teams.forEach(team => {
-        const [Sck, Comb, Asst, Solo] = team.stats;
-
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <sacks>${Sck || '0'}</sacks>\n`;
-        xml += `    <combinedTackles>${Comb || '0'}</combinedTackles>\n`;
-        xml += `    <assists>${Asst || '0'}</assists>\n`;
-        xml += `    <soloTackles>${Solo || '0'}</soloTackles>\n`;
-        xml += `  </team>\n`;
-    });
-
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflDefenseTacklesStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflDefenseTacklesStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
-    const teams = await fetchNFLScoringData();
+    const teams = await fetchNFLTacklesData();
     if (teams.length > 0) {
-        generateXML(teams);
+        saveToJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};

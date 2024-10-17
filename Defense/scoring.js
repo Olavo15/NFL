@@ -39,33 +39,27 @@ async function fetchNFLScoringData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
+function saveToJSON(teams) {
+    const jsonData = teams.map(team => ({
+        teamName: team.teamName,
+        fumbleRecoveriesTD: team.stats[0] || '0',
+        safeties: team.stats[1] || '0',
+        interceptionTouchdowns: team.stats[2] || '0'
+    }));
 
-    teams.forEach(team => {
-        const [frTD, sfty, intTD] = team.stats; 
-
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <fumbleRecoveriesTD>${frTD || '0'}</fumbleRecoveriesTD>\n`; 
-        xml += `    <safeties>${sfty || '0'}</safeties>\n`; 
-        xml += `    <interceptionTouchdowns>${intTD || '0'}</interceptionTouchdowns>\n`;
-        xml += `  </team>\n`;
-    });
-
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflDefenseScoringStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflDefenseScoringStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLScoringData();
     if (teams.length > 0) {
-        generateXML(teams);
+        saveToJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};
