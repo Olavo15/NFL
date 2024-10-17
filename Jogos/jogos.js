@@ -22,7 +22,7 @@ async function fetchNFLScores() {
         gameRows.each((index, element) => {
             const awayTeam = $(element).find('td:nth-child(1) .TeamName a').text().trim();
             const homeTeam = $(element).find('td:nth-child(2) .TeamName a').text().trim();
-            const timeTV = $(element).find('td:nth-child(3) .CellGame a').text().trim();
+            
             
 
 
@@ -30,7 +30,7 @@ async function fetchNFLScores() {
                 games.push({
                     homeTeam,
                     awayTeam,
-                    timeTV,
+            
                 });
             }
         });
@@ -50,7 +50,6 @@ function generateScoresXML(games) {
         xml += `  <game>\n`;
         xml += `    <homeTeam>${game.homeTeam}</homeTeam>\n`;
         xml += `    <awayTeam>${game.awayTeam}</awayTeam>\n`;
-        xml += `    <timeTV>${game.timeTV}</timeTV>\n`;
         xml += `  </game>\n\n`;
     });
 
