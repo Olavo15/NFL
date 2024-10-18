@@ -19,6 +19,7 @@ async function fetchNFLScores() {
         gameRows.each((index, element) => {
             const awayTeam = $(element).find('td:nth-child(1) .TeamName a').text().trim();
             const homeTeam = $(element).find('td:nth-child(2) .TeamName a').text().trim();
+            const TimeTv = 
 
             if (homeTeam && awayTeam) {
                 games.push({
