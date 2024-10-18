@@ -2,17 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 
-const pastaDocs = path.join(__dirname, 'Docs');
-
-function criarPasta() {
-    if (!fs.existsSync(pastaDocs)) {
-        fs.mkdirSync(pastaDocs);
-        console.log(chalk.green(`Pasta "Docs" criada.\n`));
-    } else {
-        console.log(chalk.red(`A pasta "Docs" já existe.\n`));
-    }
-}
-
 function definirCor(progresso) {
     if (progresso < 50) {
         return chalk.red(`${progresso.toFixed(2)}%`);
@@ -30,7 +19,7 @@ async function executarArquivos(arquivos) {
         const arquivo = arquivos[index];
         const caminhoArquivo = path.join(__dirname, arquivo);
 
-        console.log(`Executando o arquivo: ${caminhoArquivo}\n`);
+        console.log(` Executando o arquivo: ${caminhoArquivo}\n`);
 
         try {
             const funcao = require(caminhoArquivo);
@@ -50,9 +39,10 @@ async function executarArquivos(arquivos) {
     console.log(chalk.green(`Todos os arquivos foram executados!`));
 }
 
-
-criarPasta();
 executarArquivos([
-    'Jogos/jogos.js', 
-    'Jogos/tabela.js'
+    'Offense/downs.js',
+    'Offense/passing.js',
+    'Offense/receiving.js',
+    'Offense/rushing.js',
+    'Offense/scoring.js',
 ]);
