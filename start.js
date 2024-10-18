@@ -7,9 +7,9 @@ const pastaDocs = path.join(__dirname, 'Docs');
 function criarPasta() {
     if (!fs.existsSync(pastaDocs)) {
         fs.mkdirSync(pastaDocs);
-        console.log('Pasta "Docs" criada.');
+        console.log(chalk.green(`Pasta "Docs" criada.\n`));
     } else {
-        console.log('A pasta "Docs" já existe.');
+        console.log(chalk.red(`A pasta "Docs" já existe.\n`));
     }
 }
 
@@ -30,14 +30,14 @@ async function executarArquivos(arquivos) {
         const arquivo = arquivos[index];
         const caminhoArquivo = path.join(__dirname, arquivo);
 
-        console.log(`Executando o arquivo: ${caminhoArquivo}`);
+        console.log(chalk.red(`Executando o arquivo: ${caminhoArquivo}\n`));
 
         
         require(caminhoArquivo);
 
         const progresso = ((index + 1) / totalArquivos) * 100;
 
-        console.log(`Progresso: ${definirCor(progresso)}`);
+        console.log(`Progresso: ${definirCor(progresso)}\n`);
   
         await new Promise(resolve => setTimeout(resolve, 1000));
     }

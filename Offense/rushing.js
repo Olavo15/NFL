@@ -6,26 +6,20 @@ const URL = "https://www.nfl.com/stats/team-stats/offense/rushing/2024/reg/all";
 
 async function fetchNFLRushingData() {
     try {
-        const browser = await puppeteer.launch({ headless: true }); 
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
 
-        
         await page.goto(URL, { waitUntil: 'networkidle2' });
+        await page.waitForSelector('tbody');
 
-        
-        await page.waitForSelector('tbody'); 
-
-        
         const html = await page.content();
         const $ = cheerio.load(html);
         const teams = [];
 
-        
         $("tbody tr").each(function () {
-            const teamName = $(this).find(".d3-o-club-fullname").text().trim();  
+            const teamName = $(this).find(".d3-o-club-fullname").text().trim();
             const stats = [];
 
-            
             $(this).find("td").each(function (index) {
                 if (index > 0) {
                     stats.push($(this).text().trim());
@@ -45,41 +39,34 @@ async function fetchNFLRushingData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
+function saveToJSON(teams) {
+    const jsonData = teams.map(team => ({
+        teamName: team.teamName,
+        rushAttempts: team.stats[0] || '0',
+        rushingYards: team.stats[1] || '0',
+        yardsPerCarry: team.stats[2] || '0',
+        touchdowns: team.stats[3] || '0',
+        rushes20Plus: team.stats[4] || '0',
+        rushes40Plus: team.stats[5] || '0',
+        longRush: team.stats[6] || '0',
+        rushFirstDowns: team.stats[7] || '0',
+        rushFirstDownPct: team.stats[8] || '0',
+        rushFumbles: team.stats[9] || '0'
+    }));
 
-    teams.forEach(team => {
-        const [rushAttempts, rushingYards, yardsPerCarry, touchdowns, rushes20Plus, rushes40Plus, longRush, rushFirstDowns, rushFirstDownPct, rushFumbles] = team.stats;
-
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <rushAttempts>${rushAttempts || '0'}</rushAttempts>\n`;
-        xml += `    <rushingYards>${rushingYards || '0'}</rushingYards>\n`;
-        xml += `    <yardsPerCarry>${yardsPerCarry || '0'}</yardsPerCarry>\n`;
-        xml += `    <touchdowns>${touchdowns || '0'}</touchdowns>\n`;
-        xml += `    <rushes20Plus>${rushes20Plus || '0'}</rushes20Plus>\n`;
-        xml += `    <rushes40Plus>${rushes40Plus || '0'}</rushes40Plus>\n`;
-        xml += `    <longRush>${longRush || '0'}</longRush>\n`;
-        xml += `    <rushFirstDowns>${rushFirstDowns || '0'}</rushFirstDowns>\n`;
-        xml += `    <rushFirstDownPct>${rushFirstDownPct || '0'}</rushFirstDownPct>\n`;
-        xml += `    <rushFumbles>${rushFumbles || '0'}</rushFumbles>\n`;
-        xml += `  </team>\n`;
-    });
-
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflOffenseRushingStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflOffenseRushingStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLRushingData();
     if (teams.length > 0) {
-        generateXML(teams);
+        saveToJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
-
+module.exports = async function() {
+    await main(); 
+};
