@@ -19,12 +19,13 @@ async function fetchNFLScores() {
         gameRows.each((index, element) => {
             const awayTeam = $(element).find('td:nth-child(1) .TeamName a').text().trim();
             const homeTeam = $(element).find('td:nth-child(2) .TeamName a').text().trim();
-            const TimeTv = 
+            const TimeTv = $(element).find('td:nth-child(3)').text().trim();
 
             if (homeTeam && awayTeam) {
                 games.push({
                     homeTeam,
                     awayTeam,
+                    TimeTv,
                 });
             }
         });
@@ -41,6 +42,7 @@ function saveToJSON(games) {
     const jsonData = games.map(game => ({
         homeTeam: game.homeTeam,
         awayTeam: game.awayTeam,
+        TimeTv: game.TimeTv, 
     }));
 
     fs.writeFileSync(`Docs/nfl_scores.json`, JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });

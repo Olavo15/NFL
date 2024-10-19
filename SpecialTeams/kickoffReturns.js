@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/special-teams/kickoff-return/2024/reg/all";
 
 async function fetchNFLKickoffReturnData() {
@@ -40,41 +39,39 @@ async function fetchNFLKickoffReturnData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
-
-    teams.forEach(team => {
+function generateJSON(teams) {
+    const jsonData = teams.map(team => {
         const [avg, ret, yds, kRetTD, twentyPlus, fortyPlus, lng, fc, fum, fgBlk, xpBlk] = team.stats;
 
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <average>${avg || '0'}</average>\n`;
-        xml += `    <returns>${ret || '0'}</returns>\n`;
-        xml += `    <yards>${yds || '0'}</yards>\n`;
-        xml += `    <kickReturnTouchdowns>${kRetTD || '0'}</kickReturnTouchdowns>\n`;
-        xml += `    <returns20Plus>${twentyPlus || '0'}</returns20Plus>\n`;
-        xml += `    <returns40Plus>${fortyPlus || '0'}</returns40Plus>\n`;
-        xml += `    <longestReturn>${lng || '0'}</longestReturn>\n`;
-        xml += `    <fairCatches>${fc || '0'}</fairCatches>\n`;
-        xml += `    <fumbles>${fum || '0'}</fumbles>\n`;
-        xml += `    <fieldGoalBlocks>${fgBlk || '0'}</fieldGoalBlocks>\n`;
-        xml += `    <extraPointBlocks>${xpBlk || '0'}</extraPointBlocks>\n`;
-        xml += `  </team>\n`;
+        return {
+            name: team.teamName,
+            average: avg || '0',
+            returns: ret || '0',
+            yards: yds || '0',
+            kickReturnTouchdowns: kRetTD || '0',
+            returns20Plus: twentyPlus || '0',
+            returns40Plus: fortyPlus || '0',
+            longestReturn: lng || '0',
+            fairCatches: fc || '0',
+            fumbles: fum || '0',
+            fieldGoalBlocks: fgBlk || '0',
+            extraPointBlocks: xpBlk || '0'
+        };
     });
 
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflKickoffReturnStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflKickoffReturnStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLKickoffReturnData();
     if (teams.length > 0) {
-        generateXML(teams);
+        generateJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};

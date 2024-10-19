@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/special-teams/kickoffs/2024/reg/all";
 
 async function fetchNFLKickoffData() {
@@ -40,40 +39,38 @@ async function fetchNFLKickoffData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
-
-    teams.forEach(team => {
+function generateJSON(teams) {
+    const jsonData = teams.map(team => {
         const [ko, yds, tb, tbPct, ret, retAvg, osk, oskRec, oob, td] = team.stats;
 
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <kickoffs>${ko || '0'}</kickoffs>\n`;
-        xml += `    <yards>${yds || '0'}</yards>\n`;
-        xml += `    <touchbacks>${tb || '0'}</touchbacks>\n`;
-        xml += `    <touchbackPercentage>${tbPct || '0'}</touchbackPercentage>\n`;
-        xml += `    <returns>${ret || '0'}</returns>\n`;
-        xml += `    <returnAverage>${retAvg || '0'}</returnAverage>\n`;
-        xml += `    <onsideKicks>${osk || '0'}</onsideKicks>\n`;
-        xml += `    <onsideKickRecoveries>${oskRec || '0'}</onsideKickRecoveries>\n`;
-        xml += `    <outOfBounds>${oob || '0'}</outOfBounds>\n`;
-        xml += `    <touchdowns>${td || '0'}</touchdowns>\n`;
-        xml += `  </team>\n`;
+        return {
+            name: team.teamName,
+            kickoffs: ko || '0',
+            yards: yds || '0',
+            touchbacks: tb || '0',
+            touchbackPercentage: tbPct || '0',
+            returns: ret || '0',
+            returnAverage: retAvg || '0',
+            onsideKicks: osk || '0',
+            onsideKickRecoveries: oskRec || '0',
+            outOfBounds: oob || '0',
+            touchdowns: td || '0'
+        };
     });
 
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflKickoffStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflKickoffStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLKickoffData();
     if (teams.length > 0) {
-        generateXML(teams);
+        generateJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};

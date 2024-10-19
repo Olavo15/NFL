@@ -39,45 +39,43 @@ async function fetchNFLPuntingData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
-
-    teams.forEach(team => {
+function generateJSON(teams) {
+    const jsonData = teams.map(team => {
         const [netAvg, netYds, punts, avg, lng, yds, in20, oob, dn, tb, fc, ret, retY, td, pBlk] = team.stats;
 
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <netAverage>${netAvg || '0'}</netAverage>\n`;
-        xml += `    <netYards>${netYds || '0'}</netYards>\n`;
-        xml += `    <punts>${punts || '0'}</punts>\n`;
-        xml += `    <average>${avg || '0'}</average>\n`;
-        xml += `    <longest>${lng || '0'}</longest>\n`;
-        xml += `    <yards>${yds || '0'}</yards>\n`;
-        xml += `    <in20>${in20 || '0'}</in20>\n`;
-        xml += `    <outOfBounds>${oob || '0'}</outOfBounds>\n`;
-        xml += `    <down>${dn || '0'}</down>\n`;
-        xml += `    <touchbacks>${tb || '0'}</touchbacks>\n`;
-        xml += `    <fairCatches>${fc || '0'}</fairCatches>\n`;
-        xml += `    <returns>${ret || '0'}</returns>\n`;
-        xml += `    <returnYards>${retY || '0'}</returnYards>\n`;
-        xml += `    <touchdowns>${td || '0'}</touchdowns>\n`;
-        xml += `    <puntsBlocked>${pBlk || '0'}</puntsBlocked>\n`;
-        xml += `  </team>\n`;
+        return {
+            name: team.teamName,
+            netAverage: netAvg || '0',
+            netYards: netYds || '0',
+            punts: punts || '0',
+            average: avg || '0',
+            longest: lng || '0',
+            yards: yds || '0',
+            in20: in20 || '0',
+            outOfBounds: oob || '0',
+            down: dn || '0',
+            touchbacks: tb || '0',
+            fairCatches: fc || '0',
+            returns: ret || '0',
+            returnYards: retY || '0',
+            touchdowns: td || '0',
+            puntsBlocked: pBlk || '0'
+        };
     });
 
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflPuntingStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflPuntingStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLPuntingData();
     if (teams.length > 0) {
-        generateXML(teams);
+        generateJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};

@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/special-teams/scoring/2024/reg/all";
 
 async function fetchNFLKickingData() {
@@ -40,36 +39,34 @@ async function fetchNFLKickingData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
-
-    teams.forEach(team => {
+function generateJSON(teams) {
+    const jsonData = teams.map(team => {
         const [fgm, fgPercentage, xpm, xpPercentage, kickReturnTD, puntReturnT] = team.stats;
 
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <fieldGoalsMade>${fgm || '0'}</fieldGoalsMade>\n`;
-        xml += `    <fieldGoalPercentage>${fgPercentage || '0'}</fieldGoalPercentage>\n`;
-        xml += `    <extraPointsMade>${xpm || '0'}</extraPointsMade>\n`;
-        xml += `    <extraPointPercentage>${xpPercentage || '0'}</extraPointPercentage>\n`;
-        xml += `    <kickReturnTouchdowns>${kickReturnTD || '0'}</kickReturnTouchdowns>\n`;
-        xml += `    <puntReturns>${puntReturnT || '0'}</puntReturns>\n`;
-        xml += `  </team>\n`;
+        return {
+            name: team.teamName,
+            fieldGoalsMade: fgm || '0',
+            fieldGoalPercentage: fgPercentage || '0',
+            extraPointsMade: xpm || '0',
+            extraPointPercentage: xpPercentage || '0',
+            kickReturnTouchdowns: kickReturnTD || '0',
+            puntReturns: puntReturnT || '0'
+        };
     });
 
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflKickingStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflKickingStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLKickingData();
     if (teams.length > 0) {
-        generateXML(teams);
+        generateJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};

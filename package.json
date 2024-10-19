@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js && node Defense/downs.js && node Defense/fumbles.js && node Defense/interceptions.js && node Defense/passing.js && node Defense/receiving.js && node Defense/rushing.js && node Defense/scoring.js",
+    "install": "mpn install",
+    "start": "node start.js",
+    "second": "node defense.js",
+    "Third": "node offense.js",
+    "four": "node specialTeam.js",
+    "end": "node test1.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "OlavoR",
   "license": "ISC",
   "description": "",
   "dependencies": {

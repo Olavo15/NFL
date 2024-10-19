@@ -19,7 +19,7 @@ async function executarArquivos(arquivos) {
         const arquivo = arquivos[index];
         const caminhoArquivo = path.join(__dirname, arquivo);
 
-        console.log(` Executando o arquivo: ${caminhoArquivo}\n`);
+        console.log(chalk.blueBright(`Executando o arquivo: ${caminhoArquivo}\n`));
 
         try {
             const funcao = require(caminhoArquivo);
@@ -30,7 +30,7 @@ async function executarArquivos(arquivos) {
         }
 
         const progresso = ((index + 1) / totalArquivos) * 100;
-        console.log(`Progresso ${definirCor(progresso)}\n`);
+        console.log(chalk.blueBright(`Progresso ${definirCor(progresso)}\n`));
 
         
         await new Promise(resolve => setTimeout(resolve, 3500));

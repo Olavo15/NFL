@@ -44,7 +44,7 @@ async function executarArquivos(arquivos) {
         console.log(`Progresso ${definirCor(progresso)}\n`);
 
         
-        await new Promise(resolve => setTimeout(resolve, 3500));
+        await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
     console.log(chalk.green(`Todos os arquivos foram executados!`));

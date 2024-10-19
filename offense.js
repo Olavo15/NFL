@@ -39,6 +39,7 @@ async function executarArquivos(arquivos) {
     console.log(chalk.green(`Todos os arquivos foram executados!`));
 }
 
+
 executarArquivos([
     'Offense/downs.js',
     'Offense/passing.js',

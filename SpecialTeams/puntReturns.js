@@ -2,9 +2,9 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-const URL = "https://www.nfl.com/stats/team-stats/special-teams/punt-returns/2024/reg/all";
+const URL = "https://www.nfl.com/stats/team-stats/special-teams/scoring/2024/reg/all";
 
-async function fetchNFLPuntReturnData() {
+async function fetchNFLKickingData() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
@@ -39,40 +39,34 @@ async function fetchNFLPuntReturnData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
+function generateJSON(teams) {
+    const jsonData = teams.map(team => {
+        const [fgm, fgPercentage, xpm, xpPercentage, kickReturnTD, puntReturnT] = team.stats;
 
-    teams.forEach(team => {
-        const [avg, ret, yds, pRetT, twentyPlus, fortyPlus, lng, fc, fum, pBlk] = team.stats;
-
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <average>${avg || '0'}</average>\n`;
-        xml += `    <returns>${ret || '0'}</returns>\n`;
-        xml += `    <yards>${yds || '0'}</yards>\n`;
-        xml += `    <puntReturnTouchdowns>${pRetT || '0'}</puntReturnTouchdowns>\n`;
-        xml += `    <twentyPlus>${twentyPlus || '0'}</twentyPlus>\n`;
-        xml += `    <fortyPlus>${fortyPlus || '0'}</fortyPlus>\n`;
-        xml += `    <longest>${lng || '0'}</longest>\n`;
-        xml += `    <fairCatches>${fc || '0'}</fairCatches>\n`;
-        xml += `    <fumbles>${fum || '0'}</fumbles>\n`;
-        xml += `    <puntsBlocked>${pBlk || '0'}</puntsBlocked>\n`;
-        xml += `  </team>\n`;
+        return {
+            name: team.teamName,
+            fieldGoalsMade: fgm || '0',
+            fieldGoalPercentage: fgPercentage || '0',
+            extraPointsMade: xpm || '0',
+            extraPointPercentage: xpPercentage || '0',
+            kickReturnTouchdowns: kickReturnTD || '0',
+            puntReturns: puntReturnT || '0'
+        };
     });
 
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflPuntReturnStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflKickingStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
-    const teams = await fetchNFLPuntReturnData();
+    const teams = await fetchNFLKickingData();
     if (teams.length > 0) {
-        generateXML(teams);
+        generateJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};

@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
+
 const URL = "https://www.nfl.com/stats/team-stats/defense/downs/2024/reg/all";
 
 async function fetchNFLScoringData() {

@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/special-teams/field-goals/2024/reg/all";
 
 async function fetchNFLFieldGoalData() {
@@ -40,41 +39,39 @@ async function fetchNFLFieldGoalData() {
     }
 }
 
-function generateXML(teams) {
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += '<teams>\n';
-
-    teams.forEach(team => {
+function generateJSON(teams) {
+    const jsonData = teams.map(team => {
         const [fgm, attempts, fgPercentage, fg1to19, fg20to29, fg30to39, fg40to49, fg50to59, fg60Plus, longest, fgBlocked] = team.stats;
 
-        xml += `  <team>\n`;
-        xml += `    <name>${team.teamName}</name>\n`;
-        xml += `    <fieldGoalsMade>${fgm || '0'}</fieldGoalsMade>\n`;
-        xml += `    <attempts>${attempts || '0'}</attempts>\n`;
-        xml += `    <fieldGoalPercentage>${fgPercentage || '0'}</fieldGoalPercentage>\n`;
-        xml += `    <fg1to19>${fg1to19 || '0'}</fg1to19>\n`;
-        xml += `    <fg20to29>${fg20to29 || '0'}</fg20to29>\n`;
-        xml += `    <fg30to39>${fg30to39 || '0'}</fg30to39>\n`;
-        xml += `    <fg40to49>${fg40to49 || '0'}</fg40to49>\n`;
-        xml += `    <fg50to59>${fg50to59 || '0'}</fg50to59>\n`;
-        xml += `    <fg60Plus>${fg60Plus || '0'}</fg60Plus>\n`;
-        xml += `    <longest>${longest || '0'}</longest>\n`;
-        xml += `    <fgBlocked>${fgBlocked || '0'}</fgBlocked>\n`;
-        xml += `  </team>\n`;
+        return {
+            name: team.teamName,
+            fieldGoalsMade: fgm || '0',
+            attempts: attempts || '0',
+            fieldGoalPercentage: fgPercentage || '0',
+            fg1to19: fg1to19 || '0',
+            fg20to29: fg20to29 || '0',
+            fg30to39: fg30to39 || '0',
+            fg40to49: fg40to49 || '0',
+            fg50to59: fg50to59 || '0',
+            fg60Plus: fg60Plus || '0',
+            longest: longest || '0',
+            fgBlocked: fgBlocked || '0'
+        };
     });
 
-    xml += '</teams>\n';
-    fs.writeFileSync('Docs/nflSpecialTeamsFieldGoalsStats.xml', xml, { encoding: 'utf-8' });
-    console.log('XML file generated successfully!');
+    fs.writeFileSync('Docs/nflSpecialTeamsFieldGoalsStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
+    console.log('JSON file generated successfully!');
 }
 
 async function main() {
     const teams = await fetchNFLFieldGoalData();
     if (teams.length > 0) {
-        generateXML(teams);
+        generateJSON(teams);
     } else {
         console.log("No team data found.");
     }
 }
 
-main();
+module.exports = async function() {
+    await main(); 
+};
