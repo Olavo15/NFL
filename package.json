@@ -4,11 +4,11 @@
   "main": "index.js",
   "scripts": {
     "install": "mpn install",
-    "start": "node start.js",
-    "second": "node defense.js",
+    "Start": "node start.js",
+    "Second": "node defense.js",
     "Third": "node offense.js",
-    "four": "node specialTeam.js",
-    "end": "node test1.js",
+    "Four": "node specialTeams.js",
+    "End": "node test1.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

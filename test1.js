@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 
-const teamNameMap = chalk.green({
+const teamNameMap = {
   'N.Y. Giants': 'New York Giants',
   'N.Y. Jets': 'New York Jets',
   'L.A. Rams': 'Los Angeles Rams',
@@ -33,7 +33,7 @@ const teamNameMap = chalk.green({
   'Tampa Bay': 'Tampa Bay Buccaneers',
   'Baltimore': 'Baltimore Ravens',
   'Arizona': 'Arizona Cardinals',
-});
+};
 
 const normalizeTeamName = (teamName) => {
   return teamNameMap[teamName] || teamName; 

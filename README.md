@@ -32,15 +32,15 @@ O projeto possui uma série de scripts que podem ser executados usando npm. Abai
   Este comando executa o arquivo `defense.js` e coleta estatísticas sobre a defesa dos times.
 
 - **Coletar dados de ataque:**  
-  `npm run third`  
+  `npm run Third`  
   Este comando executa o arquivo `offense.js` e coleta estatísticas sobre o ataque dos times.
 
 - **Coletar dados de times especiais:**  
-  `npm run four`  
+  `npm run Four`  
   Este comando executa o arquivo `specialTeam.js` e coleta estatísticas sobre os times especiais.
 
 - **Executar testes e análise de dados:**  
-  `npm run end`  
+  `npm run End`  
   Este comando executa o arquivo `test1.js`, que faz a análise das estatísticas coletadas para prever possíveis resultados dos jogos.
 
 ## Dependências
