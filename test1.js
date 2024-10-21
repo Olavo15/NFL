@@ -43,7 +43,7 @@ function loadJsonFile(filePath) {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) {
-        reject(`Erro ao ler o arquivo: ${filePath}`);
+        reject(chalk.red(`Erro ao ler o arquivo: ${filePath}`));
       } else {
         resolve(JSON.parse(data));
       }
@@ -91,7 +91,7 @@ async function loadNflData(directory) {
       data.special_teams[file] = await loadJsonFile(path.join(directory, file));
     }
   } catch (error) {
-    console.error("Erro ao carregar os arquivos:", error);
+    console.error(chalk.red("Erro ao carregar os arquivos:", error));
   }
 
   return data;
@@ -99,7 +99,7 @@ async function loadNflData(directory) {
 
 function predictWinnersForAllGames(nflData) {
   if (!nflData.scores || nflData.scores.length === 0) {
-    return 'Nenhuma partida encontrada nos dados de scores.';
+    return chalk.red('Nenhuma partida encontrada nos dados de scores.');
   }
 
   
