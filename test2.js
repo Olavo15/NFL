@@ -36,7 +36,7 @@ const teamNameMap = {
 };
 
 const normalizeTeamName = (teamName) => {
-  return teamNameMap[teamName] || teamName;
+  return teamNameMap[teamName] || teamName; 
 };
 
 function loadJsonFile(filePath) {
@@ -98,29 +98,29 @@ async function loadNflData(directory) {
 }
 
 function calculateTeamScore(teamStats, nflData) {
-  let score = 0;
+  
+  const winPercentage = parseFloat(teamStats.Percentage);
 
   
-  score += parseFloat(teamStats.Percentage) * 0.4;
+  const pointsFor = parseFloat(teamStats.PointsFor);  
+  
+  
+  const pointsAgainst = parseFloat(teamStats.PointsAgainst);  
 
   
-  const offenseStats = nflData.offense['nflOffenseScoringStats.json'].find(offenseTeam =>
-    offenseTeam.teamName.toLowerCase() === teamStats.teamName.toLowerCase()
-  );
-  if (offenseStats) {
-    score += parseFloat(offenseStats.yardsPerGame) * 0.3;
-  }
+  const offenseYards = parseFloat(teamStats.OffenseYards);  
+  const defenseYardsAllowed = parseFloat(teamStats.DefenseYardsAllowed);  
 
   
-  const defenseStats = nflData.defense['nflDefenseScoringStats.json'].find(defenseTeam =>
-    defenseTeam.teamName.toLowerCase() === teamStats.teamName.toLowerCase()
-  );
-  if (defenseStats) {
-    score += (100 - parseFloat(defenseStats.yardsAllowedPerGame)) * 0.3;
-  }
+  const score = (winPercentage * 0.4)  
+               + (pointsFor * 0.2)     
+               + ((1 / pointsAgainst) * 0.2) 
+               + (offenseYards * 0.1)  
+               + ((1 / defenseYardsAllowed) * 0.1);  
 
   return score;
 }
+
 
 function predictWinnersForAllGames(nflData) {
   if (!nflData.scores || nflData.scores.length === 0) {
@@ -148,7 +148,7 @@ function predictWinnersForAllGames(nflData) {
     }
 
     
-    const homeTeamScore = calculateTeamScore(homeTeamStats, nflData);
+    const homeTeamScore = calculateTeamScore(homeTeamStats, nflData) + 0.5;  
     const awayTeamScore = calculateTeamScore(awayTeamStats, nflData);
 
     const predictedWinner = homeTeamScore > awayTeamScore ? homeTeam : awayTeam;
