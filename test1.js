@@ -36,7 +36,7 @@ const teamNameMap = {
 };
 
 const normalizeTeamName = (teamName) => {
-  return teamNameMap[teamName] || teamName; 
+  return teamNameMap[teamName] || teamName;
 };
 
 function loadJsonFile(filePath) {
@@ -97,20 +97,41 @@ async function loadNflData(directory) {
   return data;
 }
 
+function calculateTeamScore(teamStats, nflData) {
+  let score = 0;
+
+  
+  score += parseFloat(teamStats.Percentage) * 0.4;
+
+  
+  const offenseStats = nflData.offense['nflOffenseScoringStats.json'].find(offenseTeam =>
+    offenseTeam.teamName.toLowerCase() === teamStats.teamName.toLowerCase()
+  );
+  if (offenseStats) {
+    score += parseFloat(offenseStats.yardsPerGame) * 0.3;
+  }
+
+  
+  const defenseStats = nflData.defense['nflDefenseScoringStats.json'].find(defenseTeam =>
+    defenseTeam.teamName.toLowerCase() === teamStats.teamName.toLowerCase()
+  );
+  if (defenseStats) {
+    score += (100 - parseFloat(defenseStats.yardsAllowedPerGame)) * 0.3;
+  }
+
+  return score;
+}
+
 function predictWinnersForAllGames(nflData) {
   if (!nflData.scores || nflData.scores.length === 0) {
     return chalk.red('Nenhuma partida encontrada nos dados de scores.');
   }
 
-  
-  console.log('Estatísticas disponíveis:\n');
-  nflData.standings.forEach(team => console.log(team.teamName));
-
   const predictions = nflData.scores.map((game) => {
     const homeTeam = normalizeTeamName(game.homeTeam);
     const awayTeam = normalizeTeamName(game.awayTeam);
 
-    console.log(`Processando jogo entre: ${homeTeam} e ${awayTeam}\n`);
+    console.log(chalk.greenBright(`Processando jogo entre: ${homeTeam} e ${awayTeam}\n`));
 
     const homeTeamStats = nflData.standings.find(team =>
       team.teamName.toLowerCase() === homeTeam.toLowerCase()
@@ -123,14 +144,15 @@ function predictWinnersForAllGames(nflData) {
       const missingTeams = [];
       if (!homeTeamStats) missingTeams.push(homeTeam);
       if (!awayTeamStats) missingTeams.push(awayTeam);
-      return `Erro: Não foi possível encontrar as estatísticas para o(s) time(s): ${missingTeams.join(', ')}.`;
+      return chalk.redBright(`Erro: Não foi possível encontrar as estatísticas para o(s) time(s): ${missingTeams.join(', ')}.`);
     }
 
-    const homeTeamWinPercentage = parseFloat(homeTeamStats.Percentage);
-    const awayTeamWinPercentage = parseFloat(awayTeamStats.Percentage);
+    
+    const homeTeamScore = calculateTeamScore(homeTeamStats, nflData);
+    const awayTeamScore = calculateTeamScore(awayTeamStats, nflData);
 
-    const predictedWinner = homeTeamWinPercentage > awayTeamWinPercentage ? homeTeam : awayTeam;
-    return `Vencedor previsto para o jogo entre ${game.homeTeam} e ${game.awayTeam}: ${predictedWinner}`;
+    const predictedWinner = homeTeamScore > awayTeamScore ? homeTeam : awayTeam;
+    return chalk.blueBright(`Vencedor previsto para o jogo entre ${game.homeTeam} e ${game.awayTeam}: ${predictedWinner}\n`);
   });
 
   return predictions.join('\n');
