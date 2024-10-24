@@ -33,7 +33,10 @@ const teamNameMap = {
   'Tampa Bay': 'Tampa Bay Buccaneers',
   'Baltimore': 'Baltimore Ravens',
   'Arizona': 'Arizona Cardinals',
+  'Chicago': 'Chicago Bears', 
+  'Dallas': 'Dallas Cowboys'
 };
+
 
 const normalizeTeamName = (teamName) => {
   return teamNameMap[teamName] || teamName; 
@@ -152,16 +155,6 @@ function predictWinnersForAllGames(nflData) {
 }
 
 
-function deleteDirectory(directory) {
-  fs.rm(directory, { recursive: true, force: true }, (err) => {
-    if (err) {
-      console.error(chalk.red(`Erro ao apagar o diretório ${directory}:`, err));
-    } else {
-      console.log(chalk.greenBright(`Diretório ${directory} apagado com sucesso.`));
-    }
-  });
-}
-
 async function main() {
   const directory = 'Docs/';  
   const nflData = await loadNflData(directory);
@@ -175,6 +168,15 @@ async function main() {
   } else {
     console.log('Falha ao carregar todos os dados necessários da NFL.');
   }
+}
+function deleteDirectory(directory) {
+  fs.rm(directory, { recursive: true, force: true }, (err) => {
+    if (err) {
+      console.error(chalk.red(`Erro ao apagar o diretório ${directory}:`, err));
+    } else {
+      console.log(chalk.greenBright(`Diretório ${directory} apagado com sucesso.`));
+    }
+  });
 }
 
 main();
