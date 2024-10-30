@@ -37,7 +37,6 @@ const teamNameMap = {
   'Dallas': 'Dallas Cowboys'
 };
 
-
 const normalizeTeamName = (teamName) => {
   return teamNameMap[teamName] || teamName; 
 };
@@ -100,17 +99,19 @@ async function loadNflData(directory) {
   return data;
 }
 
-
-function calculateTeamScore(teamStats, nflData) {
+function calculateTeamScore(teamStats) {
   const winPercentage = parseFloat(teamStats.Percentage);
   const pointsFor = parseFloat(teamStats.PointsFor);
   const pointsAgainst = parseFloat(teamStats.PointsAgainst);
   const offenseYards = parseFloat(teamStats.OffenseYards);
   const defenseYardsAllowed = parseFloat(teamStats.DefenseYardsAllowed);
+  const turnoverRatio = parseFloat(teamStats.TurnoverRatio) || 0;
+  const sacks = parseFloat(teamStats.Sacks) || 0;
+  const redZoneEfficiency = parseFloat(teamStats.RedZoneEfficiency) || 0;
 
-  
-  const score = (winPercentage * 0.4) + (pointsFor * 0.2) + ((1 / pointsAgainst) * 0.2)
-                + (offenseYards * 0.1) + ((1 / defenseYardsAllowed) * 0.1);
+  const score = (winPercentage * 0.5) + (pointsFor * 0.15) + ((1 / pointsAgainst) * 0.1)
+                + (offenseYards * 0.1) + ((1 / defenseYardsAllowed) * 0.05)
+                + (turnoverRatio * 0.05) + (sacks * 0.03) + (redZoneEfficiency * 0.02);
 
   return score;
 }
@@ -120,14 +121,9 @@ function predictWinnersForAllGames(nflData) {
     return chalk.red('Nenhuma partida encontrada nos dados de scores.');
   }
 
-  console.log(chalk.blueBright('Estatísticas disponíveis:\n'));
-  nflData.standings.forEach(team => console.log(chalk.blueBright((team.teamName))));
-
   const predictions = nflData.scores.map((game) => {
     const homeTeam = normalizeTeamName(game.homeTeam);
     const awayTeam = normalizeTeamName(game.awayTeam);
-
-    console.log(chalk.greenBright(`Processando jogo entre: ${homeTeam} e ${awayTeam}\n`));
 
     const homeTeamStats = nflData.standings.find(team =>
       team.teamName.toLowerCase() === homeTeam.toLowerCase()
@@ -140,23 +136,32 @@ function predictWinnersForAllGames(nflData) {
       const missingTeams = [];
       if (!homeTeamStats) missingTeams.push(homeTeam);
       if (!awayTeamStats) missingTeams.push(awayTeam);
-      return chalk.redBright(`Erro: Não foi possível encontrar as estatísticas para o(s) time(s): ${missingTeams.join(', ')}.`);
+      return `Erro: Não foi possível encontrar as estatísticas para o(s) time(s): ${missingTeams.join(', ')}.`;
     }
 
-    
-    const homeTeamScore = calculateTeamScore(homeTeamStats, nflData) + 0.5;
-    const awayTeamScore = calculateTeamScore(awayTeamStats, nflData);
+    const homeTeamScore = calculateTeamScore(homeTeamStats);
+    const awayTeamScore = calculateTeamScore(awayTeamStats);
 
     const predictedWinner = homeTeamScore > awayTeamScore ? homeTeam : awayTeam;
-    return chalk.blueBright(`Vencedor previsto para o jogo entre ${game.homeTeam} e ${game.awayTeam}: ${predictedWinner}\n`);
+    return `Vencedor previsto para o jogo entre ${game.homeTeam} e ${game.awayTeam}: ${predictedWinner}`;
   });
 
   return predictions.join('\n');
 }
 
+function savePredictions(predictions) {
+  const filePath = path.join(__dirname, 'predictions.txt');
+  fs.writeFile(filePath, predictions, 'utf8', (err) => {
+    if (err) {
+      console.error(chalk.red('Erro ao salvar as previsões:', err));
+    } else {
+      console.log(chalk.greenBright(`Previsões salvas com sucesso em ${filePath}`));
+    }
+  });
+}
 
 async function main() {
-  const directory = 'Docs/';  
+  const directory = 'Docs/';
   const nflData = await loadNflData(directory);
 
   if (nflData && nflData.scores && nflData.standings) {
@@ -164,11 +169,14 @@ async function main() {
     console.log(predictions);
 
     
+    savePredictions(predictions);
+    
     deleteDirectory(directory);
   } else {
     console.log('Falha ao carregar todos os dados necessários da NFL.');
   }
 }
+
 function deleteDirectory(directory) {
   fs.rm(directory, { recursive: true, force: true }, (err) => {
     if (err) {
