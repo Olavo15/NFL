@@ -1,4 +1,5 @@
 const axios = require('axios');
+const chalk = require('chalk');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
@@ -59,7 +60,7 @@ function saveToJSON(teams) {
     }));
 
     fs.writeFileSync('Docs/nfl_standings.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
-    console.log('JSON file generated successfully!');
+    console.log(chalk.green('JSON file generated successfully!'));
 }
 
 async function main() {
@@ -67,7 +68,7 @@ async function main() {
     if (teams.length > 0) {
         saveToJSON(teams);
     } else {
-        console.log('No teams found.');
+        console.log(chalk.red('No teams found.'));
     }
 }
 
