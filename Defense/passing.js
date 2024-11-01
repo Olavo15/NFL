@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
+const chalk = require('chalk');
 
 const URL = "https://www.nfl.com/stats/team-stats/defense/passing/2024/reg/all";
 
@@ -59,18 +60,17 @@ function saveToJSON(teams) {
     }));
 
     fs.writeFileSync('Docs/nflDefensePassingStats.json', JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
-    console.log('JSON file generated successfully!');
+    console.log(chalk.green('JSON file generated successfully!'));
 }
 
 async function main() {
-    const teams = await fetchNFLPassingData();
+    const teams = await fetchNFLScoringData();
     if (teams.length > 0) {
         saveToJSON(teams);
     } else {
-        console.log("No team data found.");
+        console.log(chalk.red("No team data found."));
     }
 }
-
 module.exports = async function() {
     await main(); 
 };
