@@ -3,7 +3,6 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const chalk = require('chalk');
 
-
 const URL = "https://www.nfl.com/stats/team-stats/defense/fumbles/2024/reg/all";
 
 async function fetchNFLFumbleData() {
@@ -56,7 +55,7 @@ function saveToJSON(teams) {
 }
 
 async function main() {
-    const teams = await fetchNFLScoringData();
+    const teams = await fetchNFLFumbleData(); 
     if (teams.length > 0) {
         saveToJSON(teams);
     } else {

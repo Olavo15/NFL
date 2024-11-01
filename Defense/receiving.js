@@ -61,7 +61,7 @@ function saveToJSON(teams) {
 }
 
 async function main() {
-    const teams = await fetchNFLScoringData();
+    const teams = await fetchNFLReceivingData();
     if (teams.length > 0) {
         saveToJSON(teams);
     } else {

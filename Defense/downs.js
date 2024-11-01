@@ -6,7 +6,7 @@ const chalk = require('chalk');
 
 const URL = "https://www.nfl.com/stats/team-stats/defense/downs/2024/reg/all";
 
-async function fetchNFLScoringData() {
+async function fetchNFLDownsData() {
     try {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
@@ -60,7 +60,7 @@ function saveToJSON(teams) {
 }
 
 async function main() {
-    const teams = await fetchNFLScoringData();
+    const teams = await fetchNFLDownsData();
     if (teams.length > 0) {
         saveToJSON(teams);
     } else {
