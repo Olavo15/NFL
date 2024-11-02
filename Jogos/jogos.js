@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
+const chalk = require('chalk');
 
 const URL = "https://www.cbssports.com/nfl/schedule/";
 
@@ -46,7 +47,7 @@ function saveToJSON(games) {
     }));
 
     fs.writeFileSync(`Docs/nfl_scores.json`, JSON.stringify(jsonData, null, 2), { encoding: 'utf-8' });
-    console.log('JSON file with scores generated successfully!');
+    console.log(chalk.green('JSON file with scores generated successfully!'));
 }
 
 async function main() {
@@ -54,7 +55,7 @@ async function main() {
     if (games.length > 0) {
         saveToJSON(games);
     } else {
-        console.log('No games found.');
+        console.log(chalk.red('No games found.'));
     }
 }
 
