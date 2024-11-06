@@ -7,38 +7,11 @@ const teamNameMap = {
   'N.Y. Jets': 'New York Jets',
   'L.A. Rams': 'Los Angeles Rams',
   'L.A. Chargers': 'Los Angeles Chargers',
-  'New Orleans': 'New Orleans Saints',
-  'Denver': 'Denver Broncos',
-  'Jacksonville': 'Jacksonville Jaguars',
-  'New England': 'New England Patriots',
-  'Cleveland': 'Cleveland Browns',
-  'Cincinnati': 'Cincinnati Bengals',
-  'Minnesota': 'Minnesota Vikings',
-  'Detroit': 'Detroit Lions',
-  'Green Bay': 'Green Bay Packers',
-  'Houston': 'Houston Texans',
-  'Indianapolis': 'Indianapolis Colts',
-  'Miami': 'Miami Dolphins',
-  'Philadelphia': 'Philadelphia Eagles',
-  'Atlanta': 'Atlanta Falcons',
-  'Seattle': 'Seattle Seahawks',
-  'Buffalo': 'Buffalo Bills',
-  'Tennessee': 'Tennessee Titans',
-  'Washington': 'Washington Commanders',
-  'Carolina': 'Carolina Panthers',
-  'Las Vegas': 'Las Vegas Raiders',
-  'San Francisco': 'San Francisco 49ers',
-  'Kansas City': 'Kansas City Chiefs',
-  'Pittsburgh': 'Pittsburgh Steelers',
-  'Tampa Bay': 'Tampa Bay Buccaneers',
-  'Baltimore': 'Baltimore Ravens',
-  'Arizona': 'Arizona Cardinals',
-  'Chicago': 'Chicago Bears', 
-  'Dallas': 'Dallas Cowboys'
+  // ... demais mapeamentos
 };
 
 const normalizeTeamName = (teamName) => {
-  return teamNameMap[teamName] || teamName; 
+  return teamNameMap[teamName] || teamName;
 };
 
 function loadJsonFile(filePath) {
@@ -80,17 +53,17 @@ async function loadNflData(directory) {
 
     data.defense = {};
     for (const file of files.defense) {
-      data.defense[file] = await loadJsonFile(path.join(directory, file));
+      Object.assign(data.defense, await loadJsonFile(path.join(directory, file)));
     }
 
     data.offense = {};
     for (const file of files.offense) {
-      data.offense[file] = await loadJsonFile(path.join(directory, file));
+      Object.assign(data.offense, await loadJsonFile(path.join(directory, file)));
     }
 
     data.special_teams = {};
     for (const file of files.special_teams) {
-      data.special_teams[file] = await loadJsonFile(path.join(directory, file));
+      Object.assign(data.special_teams, await loadJsonFile(path.join(directory, file)));
     }
   } catch (error) {
     console.error(chalk.red("Erro ao carregar os arquivos:", error));
@@ -100,11 +73,11 @@ async function loadNflData(directory) {
 }
 
 function calculateTeamScore(teamStats) {
-  const winPercentage = parseFloat(teamStats.Percentage);
-  const pointsFor = parseFloat(teamStats.PointsFor);
-  const pointsAgainst = parseFloat(teamStats.PointsAgainst);
-  const offenseYards = parseFloat(teamStats.OffenseYards);
-  const defenseYardsAllowed = parseFloat(teamStats.DefenseYardsAllowed);
+  const winPercentage = parseFloat(teamStats.Percentage) || 0;
+  const pointsFor = parseFloat(teamStats.PointsFor) || 0;
+  const pointsAgainst = parseFloat(teamStats.PointsAgainst) || 0;
+  const offenseYards = parseFloat(teamStats.OffenseYards) || 0;
+  const defenseYardsAllowed = parseFloat(teamStats.DefenseYardsAllowed) || 0;
   const turnoverRatio = parseFloat(teamStats.TurnoverRatio) || 0;
   const sacks = parseFloat(teamStats.Sacks) || 0;
   const redZoneEfficiency = parseFloat(teamStats.RedZoneEfficiency) || 0;
@@ -116,6 +89,20 @@ function calculateTeamScore(teamStats) {
   return score;
 }
 
+function getCombinedTeamStats(teamName, nflData) {
+  const teamStats = nflData.standings.find(
+    (team) => team.teamName.toLowerCase() === teamName.toLowerCase()
+  );
+
+  if (!teamStats) return null;
+
+  const offenseStats = nflData.offense[teamName] || {};
+  const defenseStats = nflData.defense[teamName] || {};
+  const specialTeamsStats = nflData.special_teams[teamName] || {};
+
+  return { ...teamStats, ...offenseStats, ...defenseStats, ...specialTeamsStats };
+}
+
 function predictWinnersForAllGames(nflData) {
   if (!nflData.scores || nflData.scores.length === 0) {
     return chalk.red('Nenhuma partida encontrada nos dados de scores.');
@@ -125,12 +112,8 @@ function predictWinnersForAllGames(nflData) {
     const homeTeam = normalizeTeamName(game.homeTeam);
     const awayTeam = normalizeTeamName(game.awayTeam);
 
-    const homeTeamStats = nflData.standings.find(team =>
-      team.teamName.toLowerCase() === homeTeam.toLowerCase()
-    );
-    const awayTeamStats = nflData.standings.find(team =>
-      team.teamName.toLowerCase() === awayTeam.toLowerCase()
-    );
+    const homeTeamStats = getCombinedTeamStats(homeTeam, nflData);
+    const awayTeamStats = getCombinedTeamStats(awayTeam, nflData);
 
     if (!homeTeamStats || !awayTeamStats) {
       const missingTeams = [];
@@ -167,10 +150,7 @@ async function main() {
   if (nflData && nflData.scores && nflData.standings) {
     const predictions = predictWinnersForAllGames(nflData);
     console.log(predictions);
-
-    
     savePredictions(predictions);
-    
     deleteDirectory(directory);
   } else {
     console.log('Falha ao carregar todos os dados necessários da NFL.');
