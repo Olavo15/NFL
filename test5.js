@@ -109,26 +109,43 @@ function calculateTeamScore(teamStats) {
   const sacks = parseFloat(teamStats.Sacks) || 0;
   const redZoneEfficiency = parseFloat(teamStats.RedZoneEfficiency) || 0;
 
-  const score = (winPercentage * 0.5) + (pointsFor * 0.15) + ((1 / pointsAgainst) * 0.1)
-                + (offenseYards * 0.1) + ((1 / defenseYardsAllowed) * 0.05)
+  
+  const pointsAgainstFactor = pointsAgainst > 0 ? (1 / pointsAgainst) : 0;
+  const defenseYardsAllowedFactor = defenseYardsAllowed > 0 ? (1 / defenseYardsAllowed) : 0;
+
+  const score = (winPercentage * 0.5) + (pointsFor * 0.15) + (pointsAgainstFactor * 0.1)
+                + (offenseYards * 0.1) + (defenseYardsAllowedFactor * 0.05)
                 + (turnoverRatio * 0.05) + (sacks * 0.03) + (redZoneEfficiency * 0.02);
 
   return score;
 }
+
 
 function getCombinedTeamStats(teamName, nflData) {
   const teamStats = nflData.standings.find(
     (team) => team.teamName.toLowerCase() === teamName.toLowerCase()
   );
 
-  if (!teamStats) return null;
+  if (!teamStats) {
+    console.log(chalk.red(`Estatísticas não encontradas para o time: ${teamName}`));
+    return null;
+  }
 
   const offenseStats = nflData.offense[teamName] || {};
   const defenseStats = nflData.defense[teamName] || {};
   const specialTeamsStats = nflData.special_teams[teamName] || {};
 
+  
+  console.log(chalk.yellow(`Estatísticas combinadas para ${teamName}:`), {
+    ...teamStats,
+    ...offenseStats,
+    ...defenseStats,
+    ...specialTeamsStats
+  });
+
   return { ...teamStats, ...offenseStats, ...defenseStats, ...specialTeamsStats };
 }
+
 
 function predictWinnersForAllGames(nflData) {
   if (!nflData.scores || nflData.scores.length === 0) {
@@ -151,6 +168,10 @@ function predictWinnersForAllGames(nflData) {
 
     const homeTeamScore = calculateTeamScore(homeTeamStats);
     const awayTeamScore = calculateTeamScore(awayTeamStats);
+
+    // Exibe os scores de cada time
+    console.log(chalk.blue(`Score do ${homeTeam}: ${homeTeamScore.toFixed(2)}`));
+    console.log(chalk.blue(`Score do ${awayTeam}: ${awayTeamScore.toFixed(2)}`));
 
     const predictedWinner = homeTeamScore > awayTeamScore ? homeTeam : awayTeam;
     return `Vencedor previsto para o jogo entre ${game.homeTeam} e ${game.awayTeam}: ${predictedWinner}`;

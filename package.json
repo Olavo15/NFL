@@ -8,7 +8,7 @@
     "Second": "node defense.js",
     "Third": "node offense.js",
     "Four": "node specialTeams.js",
-    "End": "node test4.js",
+    "End": "node test5.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
