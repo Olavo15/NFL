@@ -100,16 +100,15 @@ async function loadNflData(directory) {
 }
 
 function calculateTeamScore(teamStats) {
-  const winPercentage = parseFloat(teamStats.Percentage) || 0;
-  const pointsFor = parseFloat(teamStats.PointsFor) || 0;
-  const pointsAgainst = parseFloat(teamStats.PointsAgainst) || 0;
-  const offenseYards = parseFloat(teamStats.OffenseYards) || 0;
-  const defenseYardsAllowed = parseFloat(teamStats.DefenseYardsAllowed) || 0;
-  const turnoverRatio = parseFloat(teamStats.TurnoverRatio) || 0;
-  const sacks = parseFloat(teamStats.Sacks) || 0;
-  const redZoneEfficiency = parseFloat(teamStats.RedZoneEfficiency) || 0;
+  const winPercentage = parseFloat(teamStats.winPercentage) || 0;
+  const pointsFor = parseFloat(teamStats.PF) || 0;
+  const pointsAgainst = parseFloat(teamStats.PA) || 0; 
+  const offenseYards = parseFloat(teamStats.OffenseYards || 0);
+  const defenseYardsAllowed = parseFloat(teamStats.DefenseYardsAllowed || 0);
+  const turnoverRatio = parseFloat(teamStats.TurnoverRatio || 0);
+  const sacks = parseFloat(teamStats.Sacks || 0);
+  const redZoneEfficiency = parseFloat(teamStats.RedZoneEfficiency || 0);
 
-  
   const pointsAgainstFactor = pointsAgainst > 0 ? (1 / pointsAgainst) : 0;
   const defenseYardsAllowedFactor = defenseYardsAllowed > 0 ? (1 / defenseYardsAllowed) : 0;
 
@@ -120,10 +119,19 @@ function calculateTeamScore(teamStats) {
   return score;
 }
 
+function cleanTeamNameFromJson(rawTeamName) {
+  return rawTeamName
+           .replace(/\s+/g, ' ') 
+           .replace(/\n/g, '')   
+           .replace(/(xz\*|xz|xy)$/, '')
+           .trim(); 
+}
 
 function getCombinedTeamStats(teamName, nflData) {
+  const targetTeamNameClean = teamName.toLowerCase();
+
   const teamStats = nflData.standings.find(
-    (team) => team.teamName.toLowerCase() === teamName.toLowerCase()
+    (team) => cleanTeamNameFromJson(team.teamName).toLowerCase() === targetTeamNameClean
   );
 
   if (!teamStats) {
@@ -135,7 +143,6 @@ function getCombinedTeamStats(teamName, nflData) {
   const defenseStats = nflData.defense[teamName] || {};
   const specialTeamsStats = nflData.special_teams[teamName] || {};
 
-  
   console.log(chalk.yellow(`Estatísticas combinadas para ${teamName}:`), {
     ...teamStats,
     ...offenseStats,
@@ -169,7 +176,6 @@ function predictWinnersForAllGames(nflData) {
     const homeTeamScore = calculateTeamScore(homeTeamStats);
     const awayTeamScore = calculateTeamScore(awayTeamStats);
 
-    // Exibe os scores de cada time
     console.log(chalk.blue(`Score do ${homeTeam}: ${homeTeamScore.toFixed(2)}`));
     console.log(chalk.blue(`Score do ${awayTeam}: ${awayTeamScore.toFixed(2)}`));
 

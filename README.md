@@ -24,11 +24,11 @@ Para configurar o projeto, siga os seguintes passos:
 O projeto possui uma série de scripts que podem ser executados usando npm. Abaixo estão os comandos disponíveis:
 
 - **Iniciar o projeto:**  
-  `npm run start`  
+  `npm run Start`  
   Este comando executa o arquivo `start.js`.
 
 - **Coletar dados de defesa:**  
-  `npm run second`  
+  `npm run Second`  
   Este comando executa o arquivo `defense.js` e coleta estatísticas sobre a defesa dos times.
 
 - **Coletar dados de ataque:**  

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "install": "mpn install",
     "Start": "node start.js",
     "Second": "node defense.js",
     "Third": "node offense.js",
