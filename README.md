@@ -1,6 +1,6 @@
 # NFL Project
 
-Este é um projeto Node.js chamado `nfl`, que utiliza várias dependências para coletar, manipular e exibir dados relacionados à NFL. O projeto está atualmente na **Fase 1 de teste**, e podem ocorrer mudanças no futuro. Ele coleta dados de estatísticas dos times e ajuda a prever possíveis vencedores.
+Este é um projeto Node.js chamado `nfl`, que utiliza várias dependências para coletar, manipular e exibir dados relacionados à NFL. O projeto está atualmente na **Fase 5 de teste**, e podem ocorrer mudanças no futuro. Ele coleta dados de estatísticas dos times e ajuda a prever possíveis vencedores.
 
 ## Requisitos
 
