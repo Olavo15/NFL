@@ -68,9 +68,19 @@ async function loadNflData(directory) {
     ],
     special_teams: [
       'nflSpecialTeamsFieldGoalsStats.json', 'nflKickoffReturnStats.json', 'nflKickoffStats.json',
-      'nflPuntingStats.json', 'nflKickingStats.json'
+      'nflPuntingStats.json', 'nflPuntReturnStats.json', 'nflKickingStats.json'
     ]
   };
+
+  // Each stats file is an array of per-team records; this indexes them by
+  // team name so stats from different files can be merged onto the same team.
+  function mergeStatsIntoDict(targetDict, records) {
+    for (const record of records) {
+      const key = record.teamName;
+      if (!key) continue;
+      targetDict[key] = { ...(targetDict[key] || {}), ...record };
+    }
+  }
 
   const data = {};
 
@@ -80,17 +90,17 @@ async function loadNflData(directory) {
 
     data.defense = {};
     for (const file of files.defense) {
-      Object.assign(data.defense, await loadJsonFile(path.join(directory, file)));
+      mergeStatsIntoDict(data.defense, await loadJsonFile(path.join(directory, file)));
     }
 
     data.offense = {};
     for (const file of files.offense) {
-      Object.assign(data.offense, await loadJsonFile(path.join(directory, file)));
+      mergeStatsIntoDict(data.offense, await loadJsonFile(path.join(directory, file)));
     }
 
     data.special_teams = {};
     for (const file of files.special_teams) {
-      Object.assign(data.special_teams, await loadJsonFile(path.join(directory, file)));
+      mergeStatsIntoDict(data.special_teams, await loadJsonFile(path.join(directory, file)));
     }
   } catch (error) {
     console.error(chalk.red("Erro ao carregar os arquivos:", error));
@@ -99,22 +109,38 @@ async function loadNflData(directory) {
   return data;
 }
 
+// ~NFL historical home win-rate edge, added to the home team's score
+const HOME_FIELD_ADVANTAGE = 2.2;
+
 function calculateTeamScore(teamStats) {
   const winPercentage = parseFloat(teamStats.winPercentage) || 0;
   const pointsFor = parseFloat(teamStats.PF) || 0;
-  const pointsAgainst = parseFloat(teamStats.PA) || 0; 
-  const offenseYards = parseFloat(teamStats.OffenseYards || 0);
-  const defenseYardsAllowed = parseFloat(teamStats.DefenseYardsAllowed || 0);
-  const turnoverRatio = parseFloat(teamStats.TurnoverRatio || 0);
-  const sacks = parseFloat(teamStats.Sacks || 0);
-  const redZoneEfficiency = parseFloat(teamStats.RedZoneEfficiency || 0);
+  const pointsAgainst = parseFloat(teamStats.PA) || 0;
+
+  // Offense and defense are kept separate because several fields share the
+  // same name on both sides (e.g. rushingYards gained vs rushingYards
+  // allowed) and would otherwise clobber each other if flattened together.
+  const offense = teamStats.offense || {};
+  const defense = teamStats.defense || {};
+  const specialTeams = teamStats.specialTeams || {};
+
+  const offenseYards = (parseFloat(offense.passingYards) || 0) + (parseFloat(offense.rushingYards) || 0);
+
+  const turnoversForced = (parseFloat(defense.interceptions) || 0) + (parseFloat(defense.fumbleRecoveries) || 0);
+  const turnoversCommitted = (parseFloat(offense.interceptions) || 0)
+                            + (parseFloat(offense.rushFumbles) || 0)
+                            + (parseFloat(offense.recFumbles) || 0);
+  const turnoverRatio = turnoversForced - turnoversCommitted;
+
+  const sacks = parseFloat(defense.sacks) || 0;
+  const redZoneEfficiency = parseFloat(offense.redZoneTdPct) || 0;
+  const fieldGoalPercentage = parseFloat(specialTeams.fieldGoalPercentage) || 0;
 
   const pointsAgainstFactor = pointsAgainst > 0 ? (1 / pointsAgainst) : 0;
-  const defenseYardsAllowedFactor = defenseYardsAllowed > 0 ? (1 / defenseYardsAllowed) : 0;
 
   const score = (winPercentage * 0.5) + (pointsFor * 0.15) + (pointsAgainstFactor * 0.1)
-                + (offenseYards * 0.1) + (defenseYardsAllowedFactor * 0.05)
-                + (turnoverRatio * 0.05) + (sacks * 0.03) + (redZoneEfficiency * 0.02);
+                + (offenseYards * 0.0005) + (turnoverRatio * 0.03) + (sacks * 0.02)
+                + (redZoneEfficiency * 0.01) + (fieldGoalPercentage * 0.01);
 
   return score;
 }
@@ -143,14 +169,7 @@ function getCombinedTeamStats(teamName, nflData) {
   const defenseStats = nflData.defense[teamName] || {};
   const specialTeamsStats = nflData.special_teams[teamName] || {};
 
-  console.log(chalk.yellow(`Estatísticas combinadas para ${teamName}:`), {
-    ...teamStats,
-    ...offenseStats,
-    ...defenseStats,
-    ...specialTeamsStats
-  });
-
-  return { ...teamStats, ...offenseStats, ...defenseStats, ...specialTeamsStats };
+  return { ...teamStats, offense: offenseStats, defense: defenseStats, specialTeams: specialTeamsStats };
 }
 
 
@@ -173,13 +192,13 @@ function predictWinnersForAllGames(nflData) {
       return `Erro: Não foi possível encontrar as estatísticas para o(s) time(s): ${missingTeams.join(', ')}.`;
     }
 
-    const homeTeamScore = calculateTeamScore(homeTeamStats);
+    const homeTeamScore = calculateTeamScore(homeTeamStats) + HOME_FIELD_ADVANTAGE;
     const awayTeamScore = calculateTeamScore(awayTeamStats);
 
     console.log(chalk.blue(`Score do ${homeTeam}: ${homeTeamScore.toFixed(2)}`));
     console.log(chalk.blue(`Score do ${awayTeam}: ${awayTeamScore.toFixed(2)}`));
 
-    const predictedWinner = homeTeamScore > awayTeamScore ? homeTeam : awayTeam;
+    const predictedWinner = homeTeamScore >= awayTeamScore ? homeTeam : awayTeam;
     return `Vencedor previsto para o jogo entre ${game.homeTeam} e ${game.awayTeam}: ${predictedWinner}`;
   });
 
