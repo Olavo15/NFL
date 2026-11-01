@@ -2,8 +2,10 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const chalk = require('chalk');
+const { getCurrentSeasonYear } = require('../season.js');
+const { normalizeNflStatsTeamName } = require('../teamNames.js');
 
-const URL = "https://www.nfl.com/stats/team-stats/defense/passing/2024/reg/all";
+const URL = `https://www.nfl.com/stats/team-stats/defense/passing/${getCurrentSeasonYear()}/reg/all`;
 
 async function fetchNFLPassingData() {
     try {
@@ -42,13 +44,13 @@ async function fetchNFLPassingData() {
 
 function saveToJSON(teams) {
     const jsonData = teams.map(team => ({
-        teamName: team.teamName,
+        teamName: normalizeNflStatsTeamName(team.teamName),
         passAttempts: team.stats[0] || '0',
         completions: team.stats[1] || '0',
         completionPercentage: team.stats[2] || '0',
         yardsPerAttempt: team.stats[3] || '0',
         passingYards: team.stats[4] || '0',
-        touchdowns: team.stats[5] || '0',
+        passingTouchdownsAllowed: team.stats[5] || '0',
         interceptions: team.stats[6] || '0',
         passerRating: team.stats[7] || '0',
         firstDowns: team.stats[8] || '0',

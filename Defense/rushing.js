@@ -2,8 +2,10 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const chalk = require('chalk');
+const { getCurrentSeasonYear } = require('../season.js');
+const { normalizeNflStatsTeamName } = require('../teamNames.js');
 
-const URL = "https://www.nfl.com/stats/team-stats/defense/rushing/2024/reg/all";
+const URL = `https://www.nfl.com/stats/team-stats/defense/rushing/${getCurrentSeasonYear()}/reg/all`;
 
 async function fetchNFLRushingData() {
     try {
@@ -42,11 +44,11 @@ async function fetchNFLRushingData() {
 
 function saveToJSON(teams) {
     const jsonData = teams.map(team => ({
-        teamName: team.teamName,
+        teamName: normalizeNflStatsTeamName(team.teamName),
         rushAttempts: team.stats[0] || '0',
         rushingYards: team.stats[1] || '0',
         yardsPerCarry: team.stats[2] || '0',
-        touchdowns: team.stats[3] || '0',
+        rushingTouchdownsAllowed: team.stats[3] || '0',
         rushes20Plus: team.stats[4] || '0',
         rushes40Plus: team.stats[5] || '0',
         longRush: team.stats[6] || '0',

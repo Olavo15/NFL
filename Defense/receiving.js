@@ -2,8 +2,10 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const chalk = require('chalk');
+const { getCurrentSeasonYear } = require('../season.js');
+const { normalizeNflStatsTeamName } = require('../teamNames.js');
 
-const URL = "https://www.nfl.com/stats/team-stats/defense/receiving/2024/reg/all";
+const URL = `https://www.nfl.com/stats/team-stats/defense/receiving/${getCurrentSeasonYear()}/reg/all`;
 
 async function fetchNFLReceivingData() {
     try {
@@ -42,11 +44,11 @@ async function fetchNFLReceivingData() {
 
 function saveToJSON(teams) {
     const jsonData = teams.map(team => ({
-        teamName: team.teamName,
+        teamName: normalizeNflStatsTeamName(team.teamName),
         receptions: team.stats[0] || '0',
         receivingYards: team.stats[1] || '0',
         yardsPerReception: team.stats[2] || '0',
-        touchdowns: team.stats[3] || '0',
+        receivingTouchdownsAllowed: team.stats[3] || '0',
         receptions20Plus: team.stats[4] || '0',
         receptions40Plus: team.stats[5] || '0',
         longReception: team.stats[6] || '0',

@@ -2,9 +2,10 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const chalk = require('chalk');
+const { getCurrentSeasonYear } = require('../season.js');
+const { normalizeNflStatsTeamName } = require('../teamNames.js');
 
-
-const URL = "https://www.nfl.com/stats/team-stats/defense/downs/2024/reg/all";
+const URL = `https://www.nfl.com/stats/team-stats/defense/downs/${getCurrentSeasonYear()}/reg/all`;
 
 async function fetchNFLDownsData() {
     try {
@@ -43,7 +44,7 @@ async function fetchNFLDownsData() {
 
 function saveToJSON(teams) {
     const jsonData = teams.map(team => ({
-        teamName: team.teamName,
+        teamName: normalizeNflStatsTeamName(team.teamName),
         thirdDownAttempts: team.stats[0] || '0',
         thirdDownMade: team.stats[1] || '0',
         fourthDownAttempts: team.stats[2] || '0',
